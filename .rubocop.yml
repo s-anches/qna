@@ -1,0 +1,18 @@
+AllCops:
+  Include:
+    - 'app/**/*.rb'
+    - 'config/**/*.rb'
+    - 'lib/**/*.rb'
+    - 'lib/**/*.rake'
+  Exclude:
+    - 'vendor/**/*'
+    - 'spec/**/*'
+    - 'db/*.rb'
+    - 'bin/**/*'
+  RunRailsCops: true
+  DisplayCopNames: true
+  StyleGuideCopsOnly: false
+
+Style/Documentation:
+  Exclude:
+    - 'lib/**/version.rb'
