@@ -6,19 +6,22 @@ RSpec.describe Question, type: :model do
 
   it { should have_many :answers }
 
-  it "all answers deleted when question delete" do
+  context "answers" do
     question = Question.new(body: "First", title: "First question")
-
     answers = Answer.all.count
 
-    question.answers.new(body: "Hello 1")
-    question.answers.new(body: "Hello 2")
+    it "created and saved" do
+      question.answers.new(body: "Hello 1")
+      question.answers.new(body: "Hello 2")
 
-    question.save!
+      question.save!
 
-    expect(Answer.all.count).to_not eq answers
+      expect(Answer.all.count).to_not eq answers
+    end
 
-    question.destroy!
-    expect(Answer.all.count).to eq answers
+    it "deleted when this question is deleted" do
+      question.destroy!
+      expect(Answer.all.count).to eq answers
+    end
   end
 end
