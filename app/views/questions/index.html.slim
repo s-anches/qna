@@ -1,0 +1,5 @@
+div class="container questions"
+  - @questions.each do |question|
+      div class="list-group"
+        h4 class="list-group-item-heading"  = question.title
+        p class="list-group-item-text"     = question.body
