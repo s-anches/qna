@@ -1,6 +1,6 @@
 div class="container questions"
   - @questions.each do |question|
       div class="list-group"
-        h4 class="list-group-item-heading"  = question.title
+        h4 class="list-group-item-heading"  = link_to question.title, question_path(question)
         p class="list-group-item-text"      = question.body
         p class="list-group-item-text"      = link_to "Create answer", new_question_answer_path(question)
