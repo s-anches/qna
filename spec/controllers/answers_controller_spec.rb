@@ -20,7 +20,7 @@ RSpec.describe AnswersController, type: :controller do
   describe "POST #create" do
     context "with valid attributes" do
       it "save the new answer to question" do
-        expect { post :create, question_id: question.id, answer: attributes_for(:answer) }.to change(Answer, :count).by(1)
+        expect { post :create, question_id: question.id, answer: attributes_for(:answer) }.to change(question.answers, :count).by(1)
       end
 
       it "redirect to show this question" do
@@ -31,7 +31,7 @@ RSpec.describe AnswersController, type: :controller do
 
     context "with invalid attributes" do
       it "don't save the new answer" do
-        expect { post :create, question_id: question.id, answer: attributes_for(:wrong_answer) }.to_not change(Answer, :count)
+        expect { post :create, question_id: question.id, answer: attributes_for(:wrong_answer) }.to_not change(question.answers, :count)
       end
 
       it "redirect to create" do
