@@ -2,10 +2,9 @@ require 'rails_helper'
 
 RSpec.describe QuestionsController, type: :controller do
   let(:question) { create(:question) }
+  let(:questions) { create_list(:question, 2) }
 
   describe "GET #index" do
-    let(:questions) { create_list(:question, 2) }
-
     before { get :index }
 
     it "show all questions" do
@@ -15,11 +14,9 @@ RSpec.describe QuestionsController, type: :controller do
     it "render index view" do
       expect(response).to render_template :index
     end
-
   end
 
   describe "GET #show" do
-
     before { get :show, id: question }
 
     it "show question" do
