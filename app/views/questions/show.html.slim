@@ -7,6 +7,7 @@ div.questions
 
   - @answers.each do |answer|
       div class="list-group"
+        p class="list-group-item-heading"   = answer.id
         p class="list-group-item-text"      = answer.body
 
   = link_to "Create new answer", new_question_answer_path(@question)

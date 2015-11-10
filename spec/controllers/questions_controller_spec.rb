@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe QuestionsController, type: :controller do
   let(:question) { create(:question) }
   let(:questions) { create_list(:question, 2) }
+  let(:question_with_answers) { create(:question_with_answers) }
 
   describe "GET #index" do
     before { get :index }
@@ -25,6 +26,11 @@ RSpec.describe QuestionsController, type: :controller do
 
     it "render show view" do
       expect(response).to render_template :show
+    end
+
+    it "show all answers" do
+      get :show, id: question_with_answers.id
+      expect(assigns(:answers)).to eq question_with_answers.answers
     end
   end
   
@@ -63,5 +69,4 @@ RSpec.describe QuestionsController, type: :controller do
       end
     end
   end
-  
 end
