@@ -2,6 +2,8 @@ require 'rails_helper'
 
 feature 'User can create new question', %q{
   In order to be able to ask question
+  User go to new question page, fill need field and click save
+  User redirect to new question page or saw error
 } do
 
   scenario 'User try to create new question with valid parameters' do
@@ -11,7 +13,7 @@ feature 'User can create new question', %q{
   end
 
   scenario 'User try to create new question with invalid parameters' do
-    save_new_question(nil, nil)
+    save_new_question
 
     expect(page).to have_content "Some errors occured"
   end

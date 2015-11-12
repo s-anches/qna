@@ -10,6 +10,7 @@ class AnswersController < ApplicationController
     if @answer.save
       redirect_to question_path(@question)
     else
+      flash[:error] = "Some errors occured"
       render :new
     end
   end
