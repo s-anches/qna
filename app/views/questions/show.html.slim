@@ -10,6 +10,10 @@ div.questions
         p class="list-group-item-heading"   = answer.id
         p class="list-group-item-text"      = answer.body
 
+  - if user_signed_in?
+    - if @question.user_id == current_user.id
+      = link_to 'Delete', question_path(@question), method: :delete
+  br
   = link_to "Create new answer", new_question_answer_path(@question)
   br
   = link_to 'Back', root_path

@@ -6,6 +6,7 @@ feature 'User can registration', %q{
   I want to be able to register
 } do
 
+  given(:user) { create(:user) }
   scenario 'Anonymous user try to register' do
     visit new_user_registration_path
 
@@ -15,6 +16,14 @@ feature 'User can registration', %q{
     click_on 'Sign up'
 
     expect(page).to have_content 'Welcome! You have signed up successfully.'
+    expect(current_path).to eq root_path
+  end
+
+  scenario 'Authenticated user try to register' do
+    sign_in(user)
+    visit new_user_registration_path
+
+    expect(page).to have_content 'You are already signed in.'
     expect(current_path).to eq root_path
   end
 

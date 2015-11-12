@@ -15,6 +15,13 @@ feature 'User can sign in', %q{
     expect(current_path).to eq root_path
   end
 
+  scenario 'Authenticated user try to sign in' do
+    sign_in(user)
+    visit new_user_session_path
+
+    expect(page).to have_content 'You are already signed in.'
+  end
+
   scenario 'Un-registered user try to sign in' do
     visit new_user_session_path
     fill_in 'Email', with: 'non-user@example.com'

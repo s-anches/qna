@@ -6,7 +6,7 @@ feature 'User can see all answers to question', %q{
   User sees all answers to this question
 } do
 
-  let(:question) { create(:question_with_answers) }
+  given(:question) { create(:question_with_answers) }
   scenario 'User try to see question and all answers' do
     visit question_path(question)
 

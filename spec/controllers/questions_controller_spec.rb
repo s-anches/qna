@@ -71,4 +71,49 @@ RSpec.describe QuestionsController, type: :controller do
       end
     end
   end
+
+  describe "DELETE #destroy" do
+    let(:user) { create(:user_with_question) }
+    let(:user2) { create(:user_with_question) }
+
+    context 'Authenticated user' do
+      before do
+        @request.env['devise.mapping'] = Devise.mappings[:user]
+        sign_in user
+        user2
+      end
+
+      it 'delete his question' do
+        user.questions.each do |question|
+          expect { delete :destroy, id: question }.to change(Question, :count).by(-1)
+        end
+      end
+
+      it 'do not delete not his question' do
+        user2.questions.each do |question|
+          expect { delete :destroy, id: question }.to_not change(Question, :count)
+        end
+      end
+
+      it 'redirect to root view' do
+        user.questions.each do |question|
+          delete :destroy, id: question
+          expect(response).to redirect_to root_path
+        end
+      end
+    end
+
+    context 'Non-authenticated user' do
+      it 'do not delete question' do
+        question
+        expect { delete :destroy, id: question }.to_not change(Question, :count)
+      end
+
+      it 'redirect to auth page' do
+        delete :destroy, id: question
+        expect(response).to redirect_to new_user_session_path
+      end
+    end
+
+  end
 end

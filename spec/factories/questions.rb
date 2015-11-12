@@ -1,4 +1,5 @@
 FactoryGirl.define do
+
   factory :question do
     title "MyString"
     body "MyText"
@@ -18,4 +19,5 @@ FactoryGirl.define do
     title nil
     body nil
   end
+
 end

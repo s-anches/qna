@@ -2,23 +2,33 @@ require 'rails_helper'
 
 feature 'User can create new answer to question', %q{
   In order to be able to create new answer to question
-  User need go to question path, click to new answer, fill field and click to save
-  User sees question page with answer
+  As an authenticated user
+  I want to be able to send answer
 } do
 
-  let(:question) { create(:question) }
+  given(:question) { create(:question) }
+  given(:user) { create(:user) }
 
-  scenario 'User try to create new answer with valid attributes' do
+  scenario 'Authenticated user try to create new answer with valid attributes' do
+    sign_in(user)
     save_new_answer(question, "Test answer")
 
     expect(current_path).to eq question_path(question)
     expect(page).to have_content("Test answer")
   end
 
-  scenario 'User try to create new answer with invalid attributes' do
+  scenario 'Authenticated user try to create new answer with invalid attributes' do
+    sign_in(user)
     save_new_answer(question)
 
     expect(page).to have_content("Some errors occured")
+  end
+
+  scenario 'Non-authenticated user try to create new answer' do
+    visit new_question_answer_path(question)
+
+    expect(page).to have_content 'You need to sign in or sign up before continuing.'
+    expect(current_path).to eq new_user_session_path
   end
 
 end

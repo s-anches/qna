@@ -6,6 +6,7 @@ RSpec.describe AnswersController, type: :controller do
   let(:wrong_answer) { create(:wrong_answer) }
 
   describe "GET #new" do
+    sign_in_user
     before { get :new, question_id: question.id }
 
     it "assigns a new Answer to Answer" do
@@ -18,6 +19,7 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe "POST #create" do
+    sign_in_user
     context "with valid attributes" do
       it "save the new answer to question" do
         expect { post :create, question_id: question.id, answer: attributes_for(:answer) }.to change(question.answers, :count).by(1)

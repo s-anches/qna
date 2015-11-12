@@ -6,9 +6,10 @@ feature 'User can see questions', %q{
   User sees all questions
 } do
 
-  let(:questions) { create_list(:question, 5) }
+  given(:questions) { create_list(:question, 5) }
+  before { questions }
+
   scenario 'User try to see all questions' do
-    questions
     visit root_path
 
     questions.each do |question|
