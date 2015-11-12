@@ -45,11 +45,19 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
+    let(:user)  { create(:user_with_question) }
+    let(:user2) { create(:user_with_question) }
+    let(:answer)  { Answer.create(body: 'Body', question: question, user: user)}
+    let(:answer2) { Answer.create(body: 'Body', question: question, user: user2)}
+
+    before { answer }
 
     context 'Authenticated user' do
-      sign_in_user
       before do
-        answer
+        @request.env['devise.mapping'] = Devise.mappings[:user]
+        sign_in user
+        user2
+        answer2
       end
 
       it 'delete his answer' do
@@ -64,6 +72,13 @@ RSpec.describe AnswersController, type: :controller do
         delete :destroy, question_id: answer.question_id, id: answer.id
         expect(response).to redirect_to question_path(answer.question_id)
       end
+    end
+
+    context 'Non-authenticated user' do
+      it 'do not delete any answer' do
+        expect { delete :destroy, question_id: answer.question_id, id: answer.id }.to_not change(Answer, :count)
+      end
+
     end
 
   end

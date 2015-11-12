@@ -7,7 +7,7 @@ class AnswersController < ApplicationController
   end
 
   def create
-    @answer = @question.answers.new(answer_params)
+    @answer = Answer.new(answer_params.merge({ user: current_user, question: @question }))
     if @answer.save
       redirect_to question_path(@question)
     else
@@ -18,12 +18,14 @@ class AnswersController < ApplicationController
 
   def destroy
     @answer = @question.answers.find(params[:id])
-    if @answer.destroy
-      flash[:success] = 'Answer succefully deleted'
-      redirect_to question_path(@question)
+    if @answer.user_id == current_user.id
+      if @answer.destroy
+        flash[:success] = 'Answer succefully deleted'
+      end
     else
-      flash[:error] = 'Some errors occured'
+      flash[:error] = "Some errors occured"
     end
+    redirect_to question_path(@question)
   end
 
   private
