@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe AnswersController, type: :controller do
   let(:question) { create(:question) }
   let(:answer) { create(:answer) }
+  let(:answer2) { create(:answer) }
   let(:wrong_answer) { create(:wrong_answer) }
 
   describe "GET #new" do
@@ -41,5 +42,29 @@ RSpec.describe AnswersController, type: :controller do
         expect(response).to render_template :new
       end
     end
+  end
+
+  describe 'DELETE #destroy' do
+
+    context 'Authenticated user' do
+      sign_in_user
+      before do
+        answer
+      end
+
+      it 'delete his answer' do
+        expect { delete :destroy, question_id: answer.question_id, id: answer.id }.to change(Answer, :count).by(-1)
+      end
+
+      it 'do not delete not his answer' do
+        expect { delete :destroy, question_id: answer2.question_id, id: answer2.id }.to_not change(Answer, :count)
+      end
+
+      it 'redirect to question page' do
+        delete :destroy, question_id: answer.question_id, id: answer.id
+        expect(response).to redirect_to question_path(answer.question_id)
+      end
+    end
+
   end
 end

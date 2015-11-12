@@ -9,6 +9,7 @@ div.questions
       div class="list-group"
         p class="list-group-item-heading"   = answer.id
         p class="list-group-item-text"      = answer.body
+        p = link_to 'Delete', [@question, answer], method: :delete
 
   - if user_signed_in?
     - if @question.user_id == current_user.id

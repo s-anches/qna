@@ -1,6 +1,6 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
-  before_action :load_question, only: [:new, :create]
+  before_action :load_question, only: [:new, :create, :destroy]
 
   def new
     @answer = @question.answers.new
@@ -13,6 +13,16 @@ class AnswersController < ApplicationController
     else
       flash[:error] = "Some errors occured"
       render :new
+    end
+  end
+
+  def destroy
+    @answer = @question.answers.find(params[:id])
+    if @answer.destroy
+      flash[:success] = 'Answer succefully deleted'
+      redirect_to question_path(@question)
+    else
+      flash[:error] = 'Some errors occured'
     end
   end
 
