@@ -6,7 +6,7 @@ feature 'User can create new answer to question', %q{
   User sees question page with answer
 } do
 
-  let(:question) { Question.create!(title: "TItle",body: "Test question") }
+  let(:question) { create(:question) }
 
   scenario 'User try to create new answer with valid attributes' do
     save_new_answer(question, "Test answer")
