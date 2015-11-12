@@ -6,32 +6,24 @@ feature 'User can create new question', %q{
   I want to be able to ask questions
 } do
 
+  given(:user) { create(:user) }
+
   scenario 'Authenticated user try to create question with valid attributes' do
-    User.create!(email: 'user@example.com', password: '12345678')
+    sign_in(user)
 
-    visit new_user_session_path
-    fill_in 'Email', with: 'user@example.com'
-    fill_in 'Password', with: '12345678'
-    click_on 'Log in'
+    save_new_question('First question', 'This is first question')
 
-    save_new_question("First question", "This is first question")
-
-    expect(page).to have_content "New question successfully created"
-    expect(page).to have_content "First question"
-    expect(page).to have_content "This is first question"
+    expect(page).to have_content 'New question successfully created'
+    expect(page).to have_content 'First question'
+    expect(page).to have_content 'This is first question'
   end
 
   scenario 'Authenticated user try to create question with invalid attributes' do
-    User.create!(email: 'user@example.com', password: '12345678')
-
-    visit new_user_session_path
-    fill_in 'Email', with: 'user@example.com'
-    fill_in 'Password', with: '12345678'
-    click_on 'Log in'
+    sign_in(user)
 
     save_new_question
 
-    expect(page).to have_content "Some errors occured"
+    expect(page).to have_content 'Some errors occured'
   end
 
   scenario 'Non-authenticated user try to create question' do
