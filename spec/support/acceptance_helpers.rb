@@ -19,4 +19,9 @@ module AcceptanceHelper
     fill_in 'Password', with: user.password
     click_on 'Log in'
   end
+
+  def sign_out
+    visit root_path
+    click_on 'Sign out'
+  end
 end

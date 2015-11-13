@@ -6,8 +6,8 @@ feature 'User can create new answer to question', %q{
   I want to be able to send answer
 } do
 
-  given(:question) { create(:question) }
   given(:user) { create(:user) }
+  given(:question) { create(:question, user: user) }
 
   scenario 'Authenticated user try to create new answer with valid attributes' do
     sign_in(user)

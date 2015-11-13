@@ -1,9 +1,13 @@
 require 'rails_helper'
 
 RSpec.describe QuestionsController, type: :controller do
-  let(:question) { create(:question) }
-  let(:questions) { create_list(:question, 2) }
-  let(:question_with_answers) { create(:question_with_answers) }
+  let(:user_one) { create(:user) }
+  let(:user_two) { create(:user) }
+  let(:question) { create(:question, user: user_one) }
+  let(:questions) { create_list(:question, 2, user: user_one) }
+  let(:answers) { create_list(:answer, 2, question: question, user: user_one) }
+
+  before { @request.env['devise.mapping'] = Devise.mappings[:user] }
 
   describe "GET #index" do
     before { get :index }
@@ -29,14 +33,15 @@ RSpec.describe QuestionsController, type: :controller do
     end
 
     it "show all answers" do
-      get :show, id: question_with_answers.id
-      expect(assigns(:answers)).to eq question_with_answers.answers
+      expect(assigns(:answers)).to eq answers
     end
   end
   
   describe "GET #new" do
-    sign_in_user
-    before { get :new }
+    before do
+      sign_in user_one
+      get :new
+    end
 
     it "assigns a new Question to Question" do
       expect(assigns(:question)).to be_a_new(Question)
@@ -48,7 +53,7 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe "POST #create" do
-    sign_in_user
+    before { sign_in user_one }
     context "with valid attributes" do
       it "save the new question" do
         expect { post :create, question: attributes_for(:question) }.to change(Question, :count).by(1)
@@ -73,39 +78,29 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe "DELETE #destroy" do
-    let(:user) { create(:user_with_question) }
-    let(:user2) { create(:user_with_question) }
+    before { question }
 
     context 'Authenticated user' do
-      before do
-        @request.env['devise.mapping'] = Devise.mappings[:user]
-        sign_in user
-        user2
-      end
 
       it 'delete his question' do
-        user.questions.each do |question|
-          expect { delete :destroy, id: question }.to change(Question, :count).by(-1)
-        end
+        sign_in user_one
+        expect { delete :destroy, id: question }.to change(Question, :count).by(-1)
       end
 
       it 'do not delete not his question' do
-        user2.questions.each do |question|
-          expect { delete :destroy, id: question }.to_not change(Question, :count)
-        end
+        sign_in user_two
+        expect { delete :destroy, id: question }.to_not change(Question, :count)
       end
 
       it 'redirect to root view' do
-        user.questions.each do |question|
-          delete :destroy, id: question
-          expect(response).to redirect_to root_path
-        end
+        sign_in user_one
+        delete :destroy, id: question
+        expect(response).to redirect_to root_path
       end
     end
 
     context 'Non-authenticated user' do
       it 'do not delete question' do
-        question
         expect { delete :destroy, id: question }.to_not change(Question, :count)
       end
 

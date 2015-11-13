@@ -1,14 +1,19 @@
 require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
-  let(:question) { create(:question) }
-  let(:answer) { create(:answer) }
-  let(:answer2) { create(:answer) }
-  let(:wrong_answer) { create(:wrong_answer) }
+  let(:user_one) { create(:user) }
+  let(:user_two) { create(:user) }
+  let(:question) { create(:question, user: user_one) }
+  let(:answer) { create(:answer, question: question, user: user_one) }
+  let(:wrong_answer) { create(:wrong_answer, question: question, user: user_one) }
+
+  before { @request.env['devise.mapping'] = Devise.mappings[:user] }
 
   describe "GET #new" do
-    sign_in_user
-    before { get :new, question_id: question.id }
+    before do
+      sign_in user_one
+      get :new, question_id: question.id
+    end
 
     it "assigns a new Answer to Answer" do
       expect(assigns(:answer)).to be_a_new(Answer)
@@ -20,7 +25,7 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe "POST #create" do
-    sign_in_user
+    before { sign_in user_one }
     context "with valid attributes" do
       it "save the new answer to question" do
         expect { post :create, question_id: question.id, answer: attributes_for(:answer) }.to change(question.answers, :count).by(1)
@@ -45,38 +50,30 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
-    let(:user)  { create(:user_with_question) }
-    let(:user2) { create(:user_with_question) }
-    let(:answer)  { Answer.create(body: 'Body', question: question, user: user)}
-    let(:answer2) { Answer.create(body: 'Body', question: question, user: user2)}
-
     before { answer }
-
+    
     context 'Authenticated user' do
-      before do
-        @request.env['devise.mapping'] = Devise.mappings[:user]
-        sign_in user
-        user2
-        answer2
-      end
 
       it 'delete his answer' do
-        expect { delete :destroy, question_id: answer.question_id, id: answer.id }.to change(Answer, :count).by(-1)
+        sign_in user_one
+        expect { delete :destroy, question_id: question.id, id: answer }.to change(Answer, :count).by(-1)
       end
 
       it 'do not delete not his answer' do
-        expect { delete :destroy, question_id: answer2.question_id, id: answer2.id }.to_not change(Answer, :count)
+        sign_in user_two
+        expect { delete :destroy, question_id: question.id, id: answer }.to_not change(Answer, :count)
       end
 
       it 'redirect to question page' do
-        delete :destroy, question_id: answer.question_id, id: answer.id
-        expect(response).to redirect_to question_path(answer.question_id)
+        sign_in user_one
+        delete :destroy, question_id: question.id, id: answer
+        expect(response).to redirect_to question_path(question)
       end
     end
 
     context 'Non-authenticated user' do
       it 'do not delete any answer' do
-        expect { delete :destroy, question_id: answer.question_id, id: answer.id }.to_not change(Answer, :count)
+        expect { delete :destroy, question_id: question.id, id: answer }.to_not change(Answer, :count)
       end
 
     end

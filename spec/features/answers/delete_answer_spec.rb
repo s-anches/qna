@@ -6,32 +6,30 @@ feature 'User can delete his answer', %q{
   I want to be able delete my answer
 } do
 
-  given(:question) { create(:question) }
-  given(:user) { create(:user) }
-  given(:user2) { create(:user) }
-  given(:answer) { Answer.create(body: 'Test answer', user: user, question: question) }
-  given(:answer2) { Answer.create(body: 'Test answer', user: user2, question: question) }
+  given(:user_one) { create(:user) }
+  given(:user_two) { create(:user) }
 
-  before { sign_in(user) }
+  given(:answer_one) { create(:answer, user: user_one) }
+  given(:answer_two) { create(:answer, user: user_two) }
 
   scenario 'Authenticated user can delete his answer' do
-    answer
-    visit question_path(question)
+    sign_in(user_one)
+    visit question_path(answer_one.question)
     click_on 'Delete answer'
+
     expect(page).to have_content 'Answer succefully deleted'
-    expect(current_path).to eq question_path(question)
+    expect(current_path).to eq question_path(answer_one.question)
   end
 
   scenario 'Authenticated user can not delete not his answer' do
-    answer2
-    visit question_path(question)
+    sign_in(user_one)
+    visit question_path(answer_two.question)
 
     expect(page).to_not have_link 'Delete answer'
   end
 
   scenario 'Non-authenticated user can non delete any answer' do
-    answer2
-    visit question_path(question)
+    visit question_path(answer_one.question)
 
     expect(page).to_not have_link 'Delete answer'
   end
