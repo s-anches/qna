@@ -35,6 +35,10 @@ RSpec.describe AnswersController, type: :controller do
         post :create, question_id: question.id, answer: attributes_for(:answer)
         expect(response).to redirect_to question_path(assigns(:question))
       end
+
+      it "have right answer owner" do
+        expect { post :create, question_id: question.id, answer: attributes_for(:answer) }.to change(user_one.answers, :count).by(1)
+      end
     end
 
     context "with invalid attributes" do
