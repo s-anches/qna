@@ -1,0 +1,5 @@
+$('.errors').html('<%= flash_messages %>');
+<% if @answer.id %>
+  $('.answers').append('<%= j render 'questions/answer', answer: @answer %>');
+  $('#answer_body').val('');
+<% end %>

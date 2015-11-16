@@ -2,26 +2,18 @@ class AnswersController < ApplicationController
   before_action :authenticate_user!
   before_action :load_question
 
-  def new
-    @answer = @question.answers.new
-  end
-
   def create
     @answer = @question.answers.new(answer_params.merge({ user: current_user }))
-    if @answer.save
-      redirect_to question_path(@question)
-    else
+    unless @answer.save
       flash[:error] = "Some errors occured"
-      render :new
     end
   end
 
   def destroy
     @answer = @question.answers.find(params[:id])
     if @answer.user_id == current_user.id
-      if @answer.destroy
-        flash[:success] = 'Answer succefully deleted'
-      end
+      @answer.destroy
+      flash[:success] = 'Answer succefully deleted'
     else
       flash[:error] = "Some errors occured"
     end

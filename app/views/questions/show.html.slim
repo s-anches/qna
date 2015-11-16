@@ -1,22 +1,16 @@
 div.questions
-  p
-    strong = @question.title
-
-  p
-    = @question.body
-
-  - @answers.each do |answer|
-      div class="list-group"
-        p class="list-group-item-heading"   = answer.id
-        p class="list-group-item-text"      = answer.body
-        - if user_signed_in?
-          -if answer.user_id == current_user.id
-            p = link_to 'Delete answer', [@question, answer], method: :delete
-
+  h1= @question.title
+  p= @question.body
   - if user_signed_in?
     - if @question.user_id == current_user.id
       = link_to 'Delete', question_path(@question), method: :delete
-  br
-  = link_to "Create new answer", new_question_answer_path(@question)
+    = form_for [@question, @answer], remote: true do |f|
+      = f.label :body, "Your answer:"
+      = f.text_area :body
+      = f.submit "Create"
+
+  div class="list-group answers"
+    - @question.answers.each do |answer|
+      = render 'answer', answer: answer
   br
   = link_to 'Back', root_path
