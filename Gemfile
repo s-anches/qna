@@ -38,4 +38,5 @@ group :test do
   gem 'shoulda-matchers', require: false
   gem 'capybara'
   gem 'launchy'
+  gem 'poltergeist'
 end
