@@ -1,3 +1,6 @@
+- if @question.errors.present?
+  - @question.errors.full_messages.each do |message|
+    div class="alert alert-danger"=message
 div class="container questions"
   = form_for @question, url: {action: "create"} do |f|
     div.field

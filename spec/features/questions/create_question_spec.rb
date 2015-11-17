@@ -23,7 +23,7 @@ feature 'User can create new question', %q{
 
     save_new_question
 
-    expect(page).to have_content 'Some errors occured'
+    expect(page).to have_content "can't be blank"
   end
 
   scenario 'Non-authenticated user try to create question' do

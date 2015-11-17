@@ -19,5 +19,8 @@ html
               - else
                 = link_to 'Sign in', new_user_session_path
     div class="container app"
-      .errors= flash_messages
+      .errors
+        - if flash.present?
+          - flash.each do |msg_type, message|
+            div class='alert alert-#{msg_type}' =message
       = yield

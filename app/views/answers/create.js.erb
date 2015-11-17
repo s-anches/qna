@@ -1,8 +1,5 @@
 <% if @answer.errors.present? %>
-  <% @answer.errors.full_messages.each do |message| %>
-    <% flash[:error] = message %>
-    $('.errors').html('<%= j flash_messages %>');
-  <% end %>
+  <%= render "layouts/error", errors: @answer.errors %>
 <% else %>
   <% if @answer.id %>
     $('.answers').append('<%= j render 'questions/answer', answer: @answer %>');
