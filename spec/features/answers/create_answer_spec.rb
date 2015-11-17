@@ -1,4 +1,4 @@
-require 'rails_helper'
+require_relative "../../../spec/feature_helper"
 
 feature 'User can create new answer to question', %q{
   In order to be able to create new answer to question

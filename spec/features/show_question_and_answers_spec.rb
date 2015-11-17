@@ -1,4 +1,4 @@
-require 'rails_helper'
+require_relative "../../spec/feature_helper"
 
 feature 'User can see all answers to question', %q{
   In order to be able see all answers to question

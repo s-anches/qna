@@ -1,4 +1,4 @@
-require 'rails_helper'
+require_relative '../../../spec/feature_helper'
 
 feature 'User can delete his question', %q{
   In order to delete question
