@@ -24,7 +24,7 @@ feature 'User can create new answer to question', %q{
     save_new_answer(question)
 
     expect(current_path).to eq question_path(question)
-    expect(page).to have_content("Some errors occured")
+    expect(page).to have_content("Body can't be blank")
   end
 
   scenario 'Non-authenticated user try to create new answer' do
