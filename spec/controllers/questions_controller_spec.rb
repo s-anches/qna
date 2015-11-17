@@ -117,6 +117,60 @@ RSpec.describe QuestionsController, type: :controller do
         expect(response).to redirect_to new_user_session_path
       end
     end
-
   end
+
+  describe "PATCH #update" do
+    context "Authenticated user with valid atributes" do
+      before { sign_in user_one }
+
+      it "assigns the requested question to @question" do
+        patch :update, id: question, question: attributes_for(:question), format: :js
+        expect(assigns(:question)).to eq question
+      end
+
+      it "change question attributes" do
+        patch :update, id: question, question: { body: "Edited body" }, format: :js
+        question.reload
+        expect(question.body).to eq "Edited body"
+      end
+
+      it "render update template" do
+        patch :update, id: question, question: attributes_for(:question), format: :js
+        expect(response).to render_template :update
+      end
+    end
+
+    context "Authenticated user with invalid atributes" do
+      it "don't change question attributes" do
+        sign_in user_one
+        patch :update, id: question, question: attributes_for(:wrong_question), format: :js
+        question.reload
+
+        expect(question.title).to eq "MyString"
+        expect(question.body).to eq "MyText"
+      end
+    end
+
+    context "Authenticated user can't edit not his question" do
+      it "don't change question attributes" do
+        sign_in user_two
+        patch :update, id: question, question: { title: "Edited title", body: "Edited body" }, format: :js
+        question.reload
+
+        expect(question.title).to eq "MyString"
+        expect(question.body).to eq "MyText"
+      end
+    end
+
+    context "Non-authenticated user can't edit any question" do
+      it "don't change question attributes" do
+        patch :update, id: question, question: { title: "Edited title", body: "Edited body" }, format: :js
+        question.reload
+
+        expect(question.title).to eq "MyString"
+        expect(question.body).to eq "MyText"
+      end
+    end
+  end
+
 end
