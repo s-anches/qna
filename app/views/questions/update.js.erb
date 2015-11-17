@@ -1,0 +1,7 @@
+<% if @question.errors.present? %>
+  <%= render "layouts/error", errors: @question.errors %>
+<% else %>
+  $('.question .body').html('<%= j @question.body %>');
+  $('.edit-question-link').show();
+  $('.edit_question').hide();
+<% end %>

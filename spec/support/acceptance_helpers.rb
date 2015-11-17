@@ -9,7 +9,7 @@ module AcceptanceHelper
   def save_new_answer(question, body = nil)
     visit question_path(question)
 
-    fill_in 'Your answer:', with: body
+    fill_in "Your answer...", with: body
     click_on 'Create'
   end
 

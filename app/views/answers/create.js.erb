@@ -2,7 +2,7 @@
   <%= render "layouts/error", errors: @answer.errors %>
 <% else %>
   <% if @answer.id %>
-    $('.answers').append('<%= j render 'questions/answer', answer: @answer %>');
+    $('.answers').prepend('<%= j render 'questions/answer', answer: @answer %>');
     $('#answer_body').val('');
   <% end %>
 <% end %>
