@@ -11,13 +11,13 @@ feature 'User can delete his answer', %q{
   given(:answer_one) { create(:answer, user: user_one) }
   given(:answer_two) { create(:answer, user: user_two) }
 
-  scenario 'Authenticated user can delete his answer' do
+  scenario 'Authenticated user can delete his answer', js: true do
     sign_in(user_one)
     visit question_path(answer_one.question)
     click_on 'Delete'
 
     expect(page).to have_content 'Answer succefully deleted'
-    expect(current_path).to eq question_path(answer_one.question)
+    expect(page).to_not have_content answer_one.body
   end
 
   scenario 'Authenticated user can not delete not his answer' do
@@ -29,7 +29,7 @@ feature 'User can delete his answer', %q{
 
   scenario 'Non-authenticated user can non delete any answer' do
     visit question_path(answer_one.question)
-    
+
     expect(page).to_not have_link 'Delete'
   end
 

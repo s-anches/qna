@@ -15,11 +15,8 @@ class AnswersController < ApplicationController
     @answer = @question.answers.find(params[:id])
     if @answer.user_id == current_user.id
       @answer.destroy
-      flash[:success] = 'Answer succefully deleted'
-    else
-      flash[:error] = "Some errors occured"
+      flash[:success] = "Answer succefully deleted"
     end
-    redirect_to question_path(@question)
   end
 
   private

@@ -9,4 +9,4 @@ div class="row"
               = f.text_area :body, class: "form-control", rows: "5"
               = f.submit "Save", class: "btn btn-default"
           = link_to 'Edit', '', class: "edit-answer-link btn btn-default", data: { id: answer.id }
-          = link_to 'Delete', [@question, answer], class: "btn btn-default", method: :delete
+          = link_to 'Delete', [@question, answer], class: "btn btn-default", method: :delete, remote: true

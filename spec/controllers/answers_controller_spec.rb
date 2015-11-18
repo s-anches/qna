@@ -54,7 +54,7 @@ RSpec.describe AnswersController, type: :controller do
         answer.reload
         expect(answer.body).to eq "Edited body"
       end
-      it "render answer template" do
+      it "render update template" do
         patch :update, id: answer, question_id: question.id, answer: attributes_for(:answer), format: :js
         expect(response).to render_template :update
       end
@@ -96,24 +96,24 @@ RSpec.describe AnswersController, type: :controller do
 
       it 'delete his answer' do
         sign_in user_one
-        expect { delete :destroy, question_id: question.id, id: answer }.to change(Answer, :count).by(-1)
+        expect { delete :destroy, question_id: question.id, id: answer, format: :js }.to change(Answer, :count).by(-1)
       end
 
       it 'do not delete not his answer' do
         sign_in user_two
-        expect { delete :destroy, question_id: question.id, id: answer }.to_not change(Answer, :count)
+        expect { delete :destroy, question_id: question.id, id: answer, format: :js }.to_not change(Answer, :count)
       end
 
-      it 'redirect to question page' do
+      it 'render delete template' do
         sign_in user_one
-        delete :destroy, question_id: question.id, id: answer
-        expect(response).to redirect_to question_path(question)
+        delete :destroy, question_id: question.id, id: answer, format: :js
+        expect(response).to render_template :destroy
       end
     end
 
     context 'Non-authenticated user' do
       it 'do not delete any answer' do
-        expect { delete :destroy, question_id: question.id, id: answer }.to_not change(Answer, :count)
+        expect { delete :destroy, question_id: question.id, id: answer, format: :js }.to_not change(Answer, :count)
       end
 
     end
