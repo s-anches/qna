@@ -1,3 +1,12 @@
-p class="list-group-item-text" = answer.body
-- if current_user && current_user.id == answer.user_id
-    p = link_to 'Delete answer', [@question, answer], method: :delete
+div class="row"
+  div class="col-xs-6"
+    div class="answer thumbnail" data-id="#{answer.id}"
+      p class="list-group-item-text" = answer.body
+      - if current_user && current_user.id == answer.user_id
+          = form_for [@question, answer], remote: true, html: {id: "edit-answer-#{answer.id}" } do |f|
+            div class="form-group"
+              = f.label :body, "Your answer:", class: "comment"
+              = f.text_area :body, class: "form-control", rows: "5"
+              = f.submit "Save", class: "btn btn-default"
+          = link_to 'Edit', '', class: "edit-answer-link btn btn-default", data: { id: answer.id }
+          = link_to 'Delete', [@question, answer], class: "btn btn-default", method: :delete

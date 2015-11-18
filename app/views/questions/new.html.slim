@@ -1,17 +1,11 @@
 - if @question.errors.present?
   - @question.errors.full_messages.each do |message|
     div class="alert alert-danger"=message
-div class="container questions"
+div class="container questions thumbnail"
+  div class="form-group"
   = form_for @question, url: {action: "create"} do |f|
-    div.field
-    = f.label :title
-    br
-    = f.text_field :title
-
-    div.field
-    = f.label :body
-    br
-    = f.text_area :body, size: "60x12"
-
-    div.actions
-    = f.submit "Create"
+      = f.text_field :title, class: "form-control", placeholder: "Title of question..."
+      br
+      = f.text_area :body, class: "form-control", rows: "5", placeholder: "Your question..."
+      br
+      = f.submit "Create", class: "btn btn-default"

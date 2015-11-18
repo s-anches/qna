@@ -6,7 +6,7 @@ feature "User can edit question", %q{
   I want to be able to edit question
 } do
 
-  given(:user) { create (:user) }
+  given(:user) { create :user }
   given(:own_question) { create :question, user: user }
   given(:foreign_question) { create :question }
 
@@ -31,7 +31,11 @@ feature "User can edit question", %q{
       end
     end
 
-    scenario "Non-author trying to edit other owner's question"
+    scenario "Non-author trying to edit other owner's question" do
+      visit question_path(foreign_question)
+
+      expect(page).to_not have_link "Edit"
+    end
   end
 
 end

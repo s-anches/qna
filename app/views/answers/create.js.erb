@@ -3,6 +3,6 @@
 <% else %>
   <% if @answer.id %>
     $('.answers').prepend('<%= j render 'questions/answer', answer: @answer %>');
-    $('#answer_body').val('');
+    $('.new_answer #answer_body').val('');
   <% end %>
 <% end %>

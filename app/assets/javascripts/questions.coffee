@@ -6,3 +6,10 @@ $ ->
     e.preventDefault();
     $(this).hide();
     $('.edit_question').show();
+
+  $('.edit-answer-link').click (e) ->
+    e.preventDefault();
+    $(this).hide();
+    answer_id = $(this).data('id');
+    console.log $(this).parent();
+    $('form#edit-answer-' + answer_id).show();

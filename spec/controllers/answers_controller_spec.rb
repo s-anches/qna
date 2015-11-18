@@ -38,6 +38,57 @@ RSpec.describe AnswersController, type: :controller do
     end
   end
 
+  describe "PATCH #update" do
+    context "Authenticated user with valid attributes" do
+      before { sign_in user_one }
+      it "assigns the requested answer to @answer" do
+        patch :update, id: answer, question_id: question.id, answer: attributes_for(:answer), format: :js
+        expect(assigns(:answer)).to eq answer
+      end
+      it "assigns question to @question" do
+        patch :update, id: answer, question_id: question.id, answer: attributes_for(:answer), format: :js
+        expect(assigns(:question)).to eq question
+      end
+      it "change answer attributes" do
+        patch :update, id: answer, question_id: question.id, answer: { body: "Edited body" }, format: :js
+        answer.reload
+        expect(answer.body).to eq "Edited body"
+      end
+      it "render answer template" do
+        patch :update, id: answer, question_id: question.id, answer: attributes_for(:answer), format: :js
+        expect(response).to render_template :update
+      end
+    end
+
+    context "Authenticated user with invalid attributes" do
+      before { sign_in user_one }
+      it "don't change answer attributes" do
+        patch :update, id: answer, question_id: question.id, answer: attributes_for(:wrong_answer), format: :js
+        answer.reload
+
+        expect(answer.body).to eq "This is test answer"
+      end
+    end
+
+    context "Authenticated user can't edit not his question" do
+      before { sign_in user_two }
+      it "don't change answer attributes" do
+        patch :update, id: answer, question_id: question.id, answer: { body: "Edited body" }, format: :js
+        answer.reload
+
+        expect(answer.body).to eq "This is test answer"
+      end
+    end
+    context "Non-authenticated user can't edit any question" do
+      it "don't change answer attributes" do
+        patch :update, id: answer, question_id: question.id, answer: { body: "Edited body" }, format: :js
+        answer.reload
+
+        expect(answer.body).to eq "This is test answer"
+      end
+    end
+  end
+
   describe 'DELETE #destroy' do
     before { answer }
     

@@ -1,18 +1,21 @@
-div.question
-  h1 class="title"= @question.title
-  p class="body"= @question.body
-  - if user_signed_in?
-    - if @question.user_id == current_user.id
-      = link_to 'Delete', question_path(@question), method: :delete
-      = link_to "Edit", "", class: "edit-question-link"
-      = form_for @question, remote: true do |f|
-        = f.label :body
-        = f.text_area :body
-        = f.submit "Save"
+div class="row"
+  div class="col-xs-6"
+    div class="thumbnail question"
+      h1 class="title"= @question.title
+      p class="body"= @question.body
+      - if user_signed_in?
+        - if @question.user_id == current_user.id
+          = link_to "Edit", "", class: "edit-question-link btn btn-default"
+          = link_to 'Delete', question_path(@question), class: "btn btn-default", method: :delete
+          = form_for @question, remote: true do |f|
+            = f.label :body
+            = f.text_area :body
+            = f.submit "Save"
 
 div class="list-group answers"
   - @question.answers.each do |answer|
-    = render 'answer', answer: answer
+    - if answer.persisted?
+      = render 'answer', answer: answer
 
   -if user_signed_in?
     = form_for [@question, @answer], remote: true do |f|

@@ -1,0 +1,7 @@
+<% if @answer.errors.present? %>
+  <%= render "layouts/error", errors: @answer.errors %>
+<% else %>
+  $('.answer[data-id=<%= @answer.id %>] p').html('<%= j @answer.body %>');
+  $('.edit-answer-link[data-id=' + <%= @answer.id %> + ']').show();
+  $('form#edit-answer-<%= @answer.id %>').hide();
+<% end %>
