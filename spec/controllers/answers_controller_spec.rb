@@ -119,4 +119,40 @@ RSpec.describe AnswersController, type: :controller do
     end
 
   end
+
+  describe 'PATCH #set_best' do
+    context "Authenticated user edit own question" do
+      before { sign_in user_one }
+
+      it 'change best flag on own question' do
+        patch :set_best, id: answer, question_id: question.id, format: :js
+        answer.reload
+        expect(answer.best).to eq true
+      end
+
+      it 'render set_best template' do
+        patch :set_best, id: answer, question_id: question.id, format: :js
+        expect(response).to render_template :set_best
+      end
+    end
+
+    context "Authenticated user can't edit not his question" do
+      before { sign_in user_two }
+
+      it "don't change best flag on foreign question" do
+        patch :set_best, id: answer, question_id: question.id, format: :js
+        answer.reload
+        expect(answer.best).to eq false
+      end
+    end
+
+    context "Non-authenticated user" do
+      it "don't change best flag on any answer in question" do
+        patch :set_best, id: answer, question_id: question.id, format: :js
+        answer.reload
+        expect(answer.best).to eq false
+      end
+    end
+  end
+
 end

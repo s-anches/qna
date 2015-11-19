@@ -1,6 +1,9 @@
 <% if @answer.errors.present? %>
   <%= render "layouts/error", errors: @answer.errors %>
 <% else %>
+  $('.answer[data-id=<%= @answer.id %>]').remove();
+
+  $('.set-best-link').removeClass('best disabled');
   $('.answers').prepend('<%= j render 'questions/answer', answer: @answer %>');
-  $('.new_answer #answer_body').val('');
+  $('.set-best-link[data-id=<%= @answer.id %>]').addClass('best disabled');
 <% end %>

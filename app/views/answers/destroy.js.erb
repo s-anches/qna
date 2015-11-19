@@ -1,11 +1,11 @@
 <% if @answer.errors.present? %>
   <%= render "layouts/error", errors: @answer.errors %>
 <% else %>
-  $('.errors').html('<div class="alert alert-success"><%= flash[:success] %></div>')
+  $('.errors').html('<div class="alert alert-success"><%= j @notice %></div>')
               .show()
               .delay(1000)
               .fadeOut(function(){
                 $(this).empty();
               });
-  $('.answer[data-id=<%= @answer.id %>]').parent().parent().remove();
+  $('.answer[data-id=<%= @answer.id %>]').remove();
 <% end %>

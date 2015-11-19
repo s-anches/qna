@@ -1,12 +1,29 @@
-div class="row"
-  div class="col-xs-6"
-    div class="answer thumbnail" data-id="#{answer.id}"
-      p class="list-group-item-text" = answer.body
-      - if current_user && current_user.id == answer.user_id
-          = form_for [@question, answer], remote: true, html: {id: "edit-answer-#{answer.id}" } do |f|
-            div class="form-group"
-              = f.label :body, "Your answer:", class: "comment"
-              = f.text_area :body, class: "form-control", rows: "5"
-              = f.submit "Save", class: "btn btn-default"
-          = link_to 'Edit', '', class: "edit-answer-link btn btn-default", data: { id: answer.id }
-          = link_to 'Delete', [@question, answer], class: "btn btn-default", method: :delete, remote: true
+- if answer.best?
+  - best = " best disabled"
+- else
+  - best = ""
+
+div class="col-xs-12 answer thumbnail" data-id="#{answer.id}"
+  p class="list-group-item-text" = answer.body
+  - if current_user
+    - if current_user.id == answer.user_id
+      = form_for [@question, answer], remote: true, html: {id: "edit-answer-#{answer.id}" } do |f|
+        div class="form-group"
+          = f.label :body, "Your answer:", class: "comment"
+          = f.text_area :body, class: "form-control", rows: "5"
+          = f.submit "Save", class: "btn btn-default"
+      = link_to 'Edit', '', class: "edit-answer-link btn btn-default", data: { id: answer.id }
+      = link_to 'Delete', [@question, answer], class: "btn btn-default", method: :delete, remote: true
+    - if current_user.id == @question.user_id
+      = link_to 'Best', set_best_question_answer_path(@question, answer),
+                        method: :patch,
+                        class: 'btn btn-default set-best-link' + best,
+                        remote: true,
+                        id: "set-best-link-#{answer.id}",
+                        data: { id: answer.id }
+  - if current_user
+    - if current_user.id != @question.user_id && answer.best?
+      p class="btn btn-default best disabled" Best
+  - else
+    - if answer.best?
+      p class="btn btn-default best disabled" Best
