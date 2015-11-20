@@ -17,10 +17,10 @@ div class="list-group answers"
     - if answer.persisted?
       = render 'answer', answer: answer
 
-  -if user_signed_in?
-    = form_for [@question, @answer], remote: true do |f|
-      .input-group
-        = f.text_area :body, class: "form-control", placeholder: "Your answer..."
-        = f.submit "Create", class: "btn btn-default"
+-if user_signed_in?
+  = form_for [@question, @answer], remote: true do |f|
+    .input-group
+      = f.text_area :body, class: "form-control", placeholder: "Your answer..."
+      = f.submit "Create", class: "btn btn-default"
 br
 = link_to 'Back', root_path

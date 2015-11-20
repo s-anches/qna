@@ -7,7 +7,7 @@ $ ->
     $(this).hide();
     $('.edit_question').show();
 
-  $('.edit-answer-link').click (e) ->
+  $('.answers').on 'click', '.edit-answer-link', (e) ->
     e.preventDefault();
     $(this).hide();
     answer_id = $(this).data('id');

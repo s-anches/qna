@@ -72,14 +72,15 @@ feature "User can choose best answer", %q{
     scenario "Best answer show on top of list", js: true do
       visit question_path(own_question)
 
-      expect(answer.body).to have_content first(".answer p").text
-      expect(answer_two.body).to_not have_content first(".answer p").text
+      within(".answers > :first-child") do
+        expect(page).to have_content answer.body
+      end
 
       click_on "set-best-link-#{answer_two.id}"
-      sleep(1)
 
-      expect(answer_two.body).to have_content first(".answer p").text
-      expect(answer.body).to_not have_content first(".answer p").text
+      within(".answers > :first-child") do
+        expect(page).to have_content answer_two.body
+      end
     end
   end
 

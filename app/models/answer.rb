@@ -12,8 +12,4 @@ class Answer < ActiveRecord::Base
       raise ActiveRecord::Rollback unless self.update(best: true)
     end
   end
-
-  def best?
-    self.best ? true : false
-  end
 end
