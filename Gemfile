@@ -24,6 +24,7 @@ gem 'slim-rails'
 gem 'devise'
 gem 'carrierwave'
 gem 'cocoon'
+gem 'remotipart'
 
 group :development, :test do
   gem 'byebug'

@@ -5,6 +5,8 @@ class Answer < ActiveRecord::Base
   belongs_to :user
   has_many :attachments, as: :attachable, dependent: :destroy
 
+  accepts_nested_attributes_for :attachments
+
   default_scope -> { order(best: :desc).order(created_at: :asc) }
 
   def set_best

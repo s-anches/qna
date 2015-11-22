@@ -8,6 +8,8 @@ RSpec.describe Answer, type: :model do
   it { should belong_to :question }
   it { should belong_to :user }
   it { should have_many(:attachments).dependent(:destroy) }
+  
+  it { should accept_nested_attributes_for :attachments }
 
   let(:question) { create :question }
   let!(:answer_one) { create :answer, question: question, created_at: "2015-11-20 13:45:37" }

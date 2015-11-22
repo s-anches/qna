@@ -3,9 +3,14 @@
     div class="alert alert-danger"=message
 div class="container questions thumbnail"
   div class="form-group"
-  = form_for @question, url: {action: "create"} do |f|
+  = form_for @question, url: { action: "create" } do |f|
       = f.text_field :title, class: "form-control", placeholder: "Title of question..."
       br
       = f.text_area :body, class: "form-control", rows: "5", placeholder: "Your question..."
+      br
+      p Attachments:
+      = f.fields_for :attachments do |a|
+        = a.label :file
+        = a.file_field :file
       br
       = f.submit "Create", class: "btn btn-default"

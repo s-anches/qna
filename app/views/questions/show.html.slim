@@ -3,6 +3,11 @@ div class="row"
     div class="thumbnail question"
       h1 class="title"= @question.title
       p class="body"= @question.body
+      div class="attachments"
+        p Attachemts:
+        ul
+          - @question.attachments.each do |a|
+            li= link_to a.file.filename, a.file.url
       - if user_signed_in?
         - if @question.user_id == current_user.id
           = link_to "Edit", "", class: "edit-question-link btn btn-default"
@@ -21,6 +26,10 @@ div class="list-group answers"
   = form_for [@question, @answer], remote: true do |f|
     .input-group
       = f.text_area :body, class: "form-control", placeholder: "Your answer..."
+      p Attachments:
+      = f.fields_for :attachments do |a|
+        = a.label :file
+        = a.file_field :file
       = f.submit "Create", class: "btn btn-default"
 br
 = link_to 'Back', root_path

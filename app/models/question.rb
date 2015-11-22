@@ -1,7 +1,9 @@
 class Question < ActiveRecord::Base
-  validates :user_id, :title, :body, presence: true
-
   belongs_to :user
   has_many :answers, dependent: :destroy
   has_many :attachments, as: :attachable, dependent: :destroy
+
+  accepts_nested_attributes_for :attachments
+
+  validates :user_id, :title, :body, presence: true
 end

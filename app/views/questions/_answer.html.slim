@@ -5,6 +5,11 @@
 
 div class="col-xs-12 answer thumbnail" data-id="#{answer.id}"
   p class="list-group-item-text" = answer.body
+  div class="attachments"
+    p Attachments:
+    ul
+      - answer.attachments.each do |a|
+        li= link_to a.file.filename, a.file.url
   - if current_user
     - if current_user.id == answer.user_id
       = form_for [@question, answer], remote: true, html: {id: "edit-answer-#{answer.id}" } do |f|
