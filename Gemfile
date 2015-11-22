@@ -22,6 +22,8 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 
 gem 'slim-rails'
 gem 'devise'
+gem 'carrierwave'
+gem 'cocoon'
 
 group :development, :test do
   gem 'byebug'
