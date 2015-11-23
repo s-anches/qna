@@ -14,7 +14,7 @@ feature 'User can delete his answer', %q{
   scenario 'Authenticated user can delete his answer', js: true do
     sign_in(user_one)
     visit question_path(answer_one.question)
-    click_on 'Delete'
+    find(".delete-answer-link").click
 
     expect(page).to have_content 'Answer succefully deleted'
     expect(page).to_not have_content answer_one.body

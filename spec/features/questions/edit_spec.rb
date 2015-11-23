@@ -23,7 +23,7 @@ feature "User can edit question", %q{
       visit question_path(own_question)
 
       within ".question" do
-        click_on "Edit"
+        find(".edit-question-link").click
         fill_in "Body", with: "Edited body"
         click_on "Save"
         expect(page).to have_content "Edited body"

@@ -17,6 +17,7 @@ feature 'Add files to answer', %q{
   scenario 'User adds files when save answer', js: true do
     fill_in 'Your answer...', with: "Body of answer"
     attach_file 'File', "#{Rails.root}/config.ru"
+
     click_on 'Create'
 
     within '.answers' do

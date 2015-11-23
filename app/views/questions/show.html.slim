@@ -1,35 +1,32 @@
 div class="row"
-  div class="col-xs-6"
-    div class="thumbnail question"
+  div class="col-xs-6 thumbnail question"
+    div class="col-xs-11"
       h1 class="title"= @question.title
       p class="body"= @question.body
-      div class="attachments"
-        p Attachemts:
-        ul
-          - @question.attachments.each do |a|
-            li= link_to a.file.filename, a.file.url
+      = render 'layouts/attachments', attachments: @question.attachments
+    div class="col-xs-1"
       - if user_signed_in?
         - if @question.user_id == current_user.id
-          = link_to "Edit", "", class: "edit-question-link btn btn-default"
-          = link_to 'Delete', question_path(@question), class: "btn btn-default", method: :delete
+          = link_to '', '', class: "edit-question-link glyphicon glyphicon-pencil"
+          = link_to '', question_path(@question),
+                        class: "delete-question-link glyphicon glyphicon-remove",
+                        method: :delete
           = form_for @question, remote: true do |f|
             = f.label :body
             = f.text_area :body
             = f.submit "Save"
 
-div class="list-group answers"
-  - @question.answers.each do |answer|
-    - if answer.persisted?
-      = render 'answer', answer: answer
+.row
+  div class="list-group answers"
+    - @question.answers.each do |answer|
+      - if answer.persisted?
+        = render 'answer', answer: answer
 
--if user_signed_in?
-  = form_for [@question, @answer], remote: true do |f|
-    .input-group
-      = f.text_area :body, class: "form-control", placeholder: "Your answer..."
-      p Attachments:
-      = f.fields_for :attachments do |a|
-        = a.label :file
-        = a.file_field :file
-      = f.submit "Create", class: "btn btn-default"
-br
-= link_to 'Back', root_path
+  -if user_signed_in?
+    = form_for [@question, @answer], remote: true do |f|
+      .input-group
+        = f.text_area :body, class: "form-control", placeholder: "Your answer..."
+        = f.fields_for :attachments do |a|
+          = a.label :file
+          = a.file_field :file, class: "attach-file"
+        = f.submit "Create", class: "btn btn-default"

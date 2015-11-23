@@ -14,7 +14,7 @@ feature 'User can delete his question', %q{
     sign_in(user_one)
 
     visit question_path(question)
-    click_on 'Delete'
+    find(".delete-question-link").click
 
     expect(page).to have_content 'Question succesfully deleted.'
     expect(current_path).to eq root_path
