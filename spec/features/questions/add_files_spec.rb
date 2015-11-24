@@ -14,12 +14,21 @@ feature 'Add files to question', %q{
   end
 
   scenario 'User adds files when ask question', js: true do
-    fill_in 'Title of question...', with: "Title of question"
-    fill_in 'Your question...', with: "Body of question"
-    attach_file 'File', "#{Rails.root}/config.ru"
+    fill_in 'Title of question...', with: "Title of question with files"
+    fill_in 'Your question...', with: "Body of question with files"
+    within all('.nested-fields').first do
+      attach_file 'File', "#{Rails.root}/config.ru"
+    end
+    click_on 'Add'
+    within all('.nested-fields').last do
+      attach_file 'File', "#{Rails.root}/Gemfile"
+    end
     click_on 'Create'
 
-    expect(page).to have_link 'config.ru', href: '/uploads/attachment/file/1/config.ru'
+    expect(page).to have_link 'config.ru',
+                    href: '/uploads/attachment/file/1/config.ru'
+    expect(page).to have_link 'Gemfile',
+                    href: '/uploads/attachment/file/2/Gemfile'
   end
 
 end

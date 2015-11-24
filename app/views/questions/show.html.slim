@@ -26,7 +26,8 @@ div class="row"
     = form_for [@question, @answer], remote: true do |f|
       .input-group
         = f.text_area :body, class: "form-control", placeholder: "Your answer..."
-        = f.fields_for :attachments do |a|
-          = a.label :file
-          = a.file_field :file, class: "attach-file"
+        = f.fields_for :attachments do |attach|
+          = render 'attachment_fields', f: attach
+          .links
+            = link_to_add_association 'Add', f, :attachments
         = f.submit "Create", class: "btn btn-default"
