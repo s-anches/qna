@@ -15,16 +15,13 @@ feature 'Add files to answer', %q{
   end
 
   scenario 'User adds files when save answer', js: true do
-
-    fill_in 'Your answer...', with: "Body of answer"
-    within all('.new-answer').first do
-      attach_file 'File', "#{Rails.root}/config.ru"
+    within '#new_answer' do
+      fill_in 'Your answer...', with: "Body of answer"
+      click_on 'Add'
+      all("input[type='file']").first.set("#{Rails.root}/config.ru")
+      all("input[type='file']").last.set("#{Rails.root}/Gemfile")
+      click_on 'Create'
     end
-    click_on 'Add'
-    within all('.new-answer').last do
-      attach_file 'File', "#{Rails.root}/Gemfile"
-    end
-    click_on 'Create'
 
     within '.answers' do
       expect(page).to have_link 'config.ru',
