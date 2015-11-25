@@ -25,8 +25,8 @@ feature "User can edit answer", %q{
       visit question_path(own_answer.question)
 
       within ".answer" do
-        find(".edit-answer-link").click
-        fill_in "Your answer:", with: "Edited answer"
+        find("#edit_answer_link_#{own_answer.id}").click
+        fill_in "answer_body", with: "Edited answer"
         click_on "Save"
         expect(page).to_not have_selector "textarea"
       end

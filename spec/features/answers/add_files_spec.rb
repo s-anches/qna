@@ -17,11 +17,11 @@ feature 'Add files to answer', %q{
   scenario 'User adds files when save answer', js: true do
 
     fill_in 'Your answer...', with: "Body of answer"
-    within all('.nested-fields').first do
+    within all('.new-answer').first do
       attach_file 'File', "#{Rails.root}/config.ru"
     end
     click_on 'Add'
-    within all('.nested-fields').last do
+    within all('.new-answer').last do
       attach_file 'File', "#{Rails.root}/Gemfile"
     end
     click_on 'Create'

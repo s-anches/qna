@@ -24,8 +24,12 @@ feature "User can edit question", %q{
 
       within ".question" do
         find(".edit-question-link").click
-        fill_in "Body", with: "Edited body"
+      end
+      within ".question-edit" do
+        fill_in "question_body", with: "Edited body"
         click_on "Save"
+      end
+      within ".question" do
         expect(page).to have_content "Edited body"
         expect(page).to_not have_selector "textarea"
       end

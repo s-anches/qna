@@ -1,7 +1,14 @@
 <% if @question.errors.present? %>
   <%= render "layouts/error", errors: @question.errors %>
 <% else %>
-  $('.question .body').html('<%= j @question.body %>');
+  $('.question-edit').hide();
   $('.edit-question-link').show();
-  $('.edit_question').hide();
+  $('.question').show();
+  $('.question p').html('<%= j @question.body %>');
+  $('.question .attachments').html('<%= j render 'layouts/attachments', attachments: @question.attachments %>');
+  <% if remotipart_submitted? %>
+    $('.question-edit').html("<%= j "#{render 'question_edit_form', question: @question}" %>");
+  <% else %>
+    $('.question-edit').html("<%= j render 'question_edit_form', question: @question %>");
+  <% end %>
 <% end %>

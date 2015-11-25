@@ -24,7 +24,7 @@ feature "User can choose best answer", %q{
 
     scenario "Author trying to choose best answer" do
       visit question_path(own_question)
-      click_on "set-best-link-#{answer_one.id}"
+      find("#set_best_link_#{answer_one.id}").click
 
       within ".answer[data-id='#{answer_one.id}']" do
         expect(page).to have_css ".best"
@@ -35,18 +35,17 @@ feature "User can choose best answer", %q{
     scenario "Author trying to change best answer" do
       visit question_path(own_question)
 
-      click_on "set-best-link-#{answer_one.id}"
+      find("#set_best_link_#{answer_one.id}").click
       within ".answer[data-id='#{answer_one.id}']" do
         expect(page).to have_css ".best"
         expect(page).to have_css ".disabled"
       end
 
-      click_on "set-best-link-#{answer_two.id}"
+      find("#set_best_link_#{answer_two.id}").click
       within ".answer[data-id='#{answer_two.id}']" do
         expect(page).to have_css ".best"
         expect(page).to have_css ".disabled"
       end
-
       within ".answer[data-id='#{answer_one.id}']" do
         expect(page).to_not have_css ".best"
         expect(page).to_not have_css ".disabled"
@@ -61,7 +60,7 @@ feature "User can choose best answer", %q{
 
     scenario "All users sees best answer", js: true do
       visit question_path(own_question)
-      click_on "set-best-link-#{answer_one.id}"
+      find("#set_best_link_#{answer_one.id}").click
       sign_out
       visit question_path(own_question)
 
@@ -76,7 +75,7 @@ feature "User can choose best answer", %q{
         expect(page).to have_content answer.body
       end
 
-      click_on "set-best-link-#{answer_two.id}"
+      find("#set_best_link_#{answer_two.id}").click
 
       within(".answers > :first-child") do
         expect(page).to have_content answer_two.body

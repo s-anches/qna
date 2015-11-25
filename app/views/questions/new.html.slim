@@ -11,7 +11,8 @@ div class="container questions thumbnail"
                          placeholder: "Your question..."
     #attachments
       = f.fields_for :attachments do |attach|
-        = render 'attachment_fields', f: attach
+        = render 'layouts/attachment_fields', f: attach
         .links
-          = link_to_add_association 'Add', f, :attachments
+          = link_to_add_association 'Add', f, :attachments,
+              partial: 'layouts/attachment_fields'
     = f.submit "Create", class: "btn btn-default"

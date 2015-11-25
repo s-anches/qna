@@ -1,0 +1,21 @@
+= form_for [@question, answer], remote: true do |f|
+  div class="form-group"
+    = f.text_area :body, class: "form-control", rows: "5"
+    .attachments
+      .row
+        .col-xs-8
+          b File name
+        .col-xs-4
+          b Remove
+      = f.fields_for :attachments do |a|
+        - attachment = a.object
+        .row
+          .col-xs-8
+            = attachment.file.filename
+          .col-xs-4
+            = a.check_box :_destroy, id: "remove-attachment-#{attachment.id}"
+      .row
+        .col-xs-12
+          = link_to_add_association 'Add', f, :attachments,
+              partial: 'layouts/attachment_fields'
+    = f.submit "Save", class: "btn btn-default"

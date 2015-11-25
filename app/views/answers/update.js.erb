@@ -3,5 +3,12 @@
 <% else %>
   $('.answer[data-id=<%= @answer.id %>] p').html('<%= j @answer.body %>');
   $('.edit-answer-link[data-id=' + <%= @answer.id %> + ']').show();
-  $('form#edit-answer-<%= @answer.id %>').hide();
+  $('form#edit_answer_<%= @answer.id %>').hide();
+  $('.answer[data-id=<%= @answer.id %>] .attachments').html('<%= j render 'layouts/attachments', attachments: @answer.attachments %>');
+  <% if remotipart_submitted? %>
+    $('form#edit_answer_<%= @answer.id %>').html("<%= j "#{render 'edit', answer: @answer
+  }" %>");
+  <% else %>
+    $('form#edit_answer_<%= @answer.id %>').html("<%= j render 'edit', answer: @answer %>");
+  <% end %>
 <% end %>

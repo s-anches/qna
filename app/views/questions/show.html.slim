@@ -1,33 +1,33 @@
-div class="row"
-  div class="col-xs-6 thumbnail question"
-    div class="col-xs-11"
-      h1 class="title"= @question.title
-      p class="body"= @question.body
-      = render 'layouts/attachments', attachments: @question.attachments
-    div class="col-xs-1"
-      - if user_signed_in?
-        - if @question.user_id == current_user.id
-          = link_to '', '', class: "edit-question-link glyphicon glyphicon-pencil"
-          = link_to '', question_path(@question),
-                        class: "delete-question-link glyphicon glyphicon-remove",
-                        method: :delete
-          = form_for @question, remote: true do |f|
-            = f.label :body
-            = f.text_area :body
-            = f.submit "Save"
+.row.question.thumbnail.col-xs-12 id="question-#{@question.id}"
+  h1= @question.title
+  p= @question.body
+  .attachments
+    = render 'layouts/attachments', attachments: @question.attachments
+  - if user_signed_in? && @question.user_id == current_user.id
+    .links
+      = link_to '', '',
+                    class: "edit-question-link glyphicon glyphicon-pencil"
+      = link_to '', question_path(@question),
+                    class: "delete-question-link glyphicon glyphicon-remove",
+                    method: :delete
 
-.row
-  div class="list-group answers"
+- if user_signed_in? && @question.user_id == current_user.id
+  .row.question-edit.thumbnail.col-xs-12 id="question-#{@question.id}"
+    = render 'question_edit_form', question: @question
+
+.row.answers
+  .list-group
     - @question.answers.each do |answer|
       - if answer.persisted?
         = render 'answer', answer: answer
 
-  -if user_signed_in?
-    = form_for [@question, @answer], remote: true do |f|
-      .input-group
-        = f.text_area :body, class: "form-control", placeholder: "Your answer..."
-        = f.fields_for :attachments do |attach|
-          = render 'attachment_fields', f: attach
-          .links
-            = link_to_add_association 'Add', f, :attachments
-        = f.submit "Create", class: "btn btn-default"
+- if user_signed_in?
+  = form_for [@question, @answer], remote: true do |f|
+    .input-group
+      = f.text_area :body, class: "form-control", placeholder: "Your answer..."
+      = f.fields_for :attachments do |attach|
+        = render 'layouts/attachment_fields', f: attach
+        .links
+          = link_to_add_association 'Add', f, :attachments,
+              partial: 'layouts/attachment_fields'
+      = f.submit "Create", class: "btn btn-default"
