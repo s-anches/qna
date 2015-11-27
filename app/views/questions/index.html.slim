@@ -1,5 +1,6 @@
-div class="container questions"
+.row
   - @questions.each do |question|
-      div class="list-group"
-        h4 class="list-group-item-heading"  = link_to question.title, question_path(question)
-        p class="list-group-item-text"      = question.body
+    .col-xs-4
+      h2.title = question.title
+      p.body   = question.body
+      p = link_to 'View »', question_path(question), class: 'btn btn-info'

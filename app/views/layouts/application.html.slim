@@ -2,25 +2,32 @@ doctype html
 html
   head
     title Question And Answers
-    = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true
-    = javascript_include_tag 'application', 'data-turbolinks-track' => true
+    = stylesheet_link_tag 'application',
+        media: 'all',
+        'data-turbolinks-track' => true
+    = javascript_include_tag 'application',
+        'data-turbolinks-track' => true
     = csrf_meta_tags
-
   body
-    header class="navbar navbar-fixed-top navbar-inverse"
-      div class="container"
-        = link_to "QnA", root_path, id: "logo"
-        nav
-          ul class="nav navbar-nav navbar-right"
-            li
-              = link_to "New Question", new_question_path
-              - if user_signed_in?
-                = link_to 'Sign out', destroy_user_session_path, method: :delete
-              - else
-                = link_to 'Sign in', new_user_session_path
-    div class="container app"
-      .errors
-        - if flash.present?
-          - flash.each do |msg_type, message|
-            div class='alert alert-#{msg_type}' =message
+    nav.navbar.navbar-default
+      .container
+        .navbar-header
+          = link_to 'QnA', root_path, id: 'logo', class: 'navbar-brand'
+        .collapse.navbar-collapse
+          ul.nav.navbar-nav.navbar-right
+            li = link_to "New Question", new_question_path,
+                    id: 'new-question-link'
+            - if user_signed_in?
+              li = link_to 'Sign out', destroy_user_session_path,
+                      method: :delete,
+                      id: 'sign-out-link'
+            - else
+              li = link_to 'Signup', new_user_registration_path,
+                      id: 'sign-in-link'
+              li = link_to 'Login', new_user_session_path,
+                      id: 'sign-in-link'
+    #errors
+      - if flash.present?
+        = flash_messages
+    .container
       = yield

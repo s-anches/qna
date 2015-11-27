@@ -1,4 +1,4 @@
-.row.question.thumbnail.col-xs-12 id="question-#{@question.id}"
+.question.thumbnail.col-xs-12 id="question-#{@question.id}"
   h1= @question.title
   p= @question.body
   .attachments
@@ -12,14 +12,13 @@
                     method: :delete
 
 - if user_signed_in? && @question.user_id == current_user.id
-  .row.question-edit.thumbnail.col-xs-12 id="question-#{@question.id}"
+  .question-edit.thumbnail.col-xs-12 id="question-#{@question.id}"
     = render 'question_edit_form', question: @question
 
-.row.answers
-  .list-group
-    - @question.answers.each do |answer|
-      - if answer.persisted?
-        = render 'answer', answer: answer
+.answers
+  - @question.answers.each do |answer|
+    - if answer.persisted?
+      = render 'answer', answer: answer
 
 - if user_signed_in?
   = form_for [@question, @answer], remote: true do |f|

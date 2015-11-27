@@ -13,7 +13,7 @@ feature 'User can see questions', %q{
     visit root_path
 
     questions.each do |question|
-      expect(page).to have_link question.title
+      expect(page).to have_content question.title
       expect(page).to have_content question.body
     end
   end

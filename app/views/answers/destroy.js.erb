@@ -1,7 +1,7 @@
 <% if @answer.errors.present? %>
   <%= render "layouts/error", errors: @answer.errors %>
 <% else %>
-  $('.errors').html('<div class="alert alert-success"><%= j @notice %></div>')
+  $('#errors').html('<div class="alert alert-success"><%= j @notice %></div>')
               .show()
               .delay(1000)
               .fadeOut(function(){

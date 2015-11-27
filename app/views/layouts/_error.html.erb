@@ -1,5 +1,5 @@
 <% errors.full_messages.each do |message| %>
-    $('.errors').html('<div class="alert alert-danger"><%= j message %></div>')
+    $('#errors').html('<div class="alert alert-danger"><%= j message %></div>')
                 .show()
                 .delay(1000)
                 .fadeOut(function(){

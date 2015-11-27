@@ -23,5 +23,6 @@ RSpec.configure do |config|
 
   config.after(:each) do
     DatabaseCleaner.clean
+    FileUtils.rm_rf(Dir["#{Rails.root}/public/uploads/tmp"])
   end
 end

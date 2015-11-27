@@ -17,3 +17,11 @@
 //= require turbolinks
 //= require cocoon
 //= require_tree .
+
+$(document).ready(function() {
+  setTimeout(function() {
+    $('#errors').fadeOut(function() {
+      $(this).html();
+    });
+  }, 1000);
+});
