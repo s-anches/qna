@@ -26,10 +26,8 @@ feature 'Add files to answer', %q{
       end
 
       within '.answers' do
-        expect(page).to have_link 'config.ru',
-                      href: '/uploads/attachment/file/1/config.ru'
-        expect(page).to have_link 'Gemfile',
-                      href: '/uploads/attachment/file/2/Gemfile'
+        expect(page).to have_link 'config.ru'
+        expect(page).to have_link 'Gemfile'
       end
     end
   end
@@ -44,8 +42,7 @@ feature 'Add files to answer', %q{
       end
 
       within ".answer[data-id='#{answer.id}']" do
-        expect(page).to have_link 'config.ru',
-                      href: '/uploads/attachment/file/1/config.ru'
+        expect(page).to have_link 'config.ru'
       end
     end
   end

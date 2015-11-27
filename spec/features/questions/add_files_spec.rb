@@ -7,7 +7,7 @@ feature 'Add files to question', %q{
 } do
 
   given(:user) { create :user }
-  given!(:question) { create :question, user: user }
+  given(:question) { create :question, user: user }
   background do
     sign_in user
   end
@@ -25,10 +25,8 @@ feature 'Add files to question', %q{
       all("input[type='file']").last.set("#{Rails.root}/Gemfile")
       click_on 'Create'
 
-      expect(page).to have_link 'config.ru',
-                      href: '/uploads/attachment/file/1/config.ru'
-      expect(page).to have_link 'Gemfile',
-                      href: '/uploads/attachment/file/2/Gemfile'
+      expect(page).to have_link 'config.ru'
+      expect(page).to have_link 'Gemfile'
     end
   end
 
@@ -45,8 +43,7 @@ feature 'Add files to question', %q{
         click_on 'Save'
       end
 
-      expect(page).to have_link 'config.ru',
-                      href: '/uploads/attachment/file/1/config.ru'
+      expect(page).to have_link 'config.ru'
     end
   end
 end
