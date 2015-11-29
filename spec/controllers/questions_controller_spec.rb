@@ -44,7 +44,7 @@ RSpec.describe QuestionsController, type: :controller do
       expect(assigns(:answers)).to eq answers
     end
   end
-  
+
   describe "GET #new" do
     before do
       sign_in user_one
@@ -177,6 +177,22 @@ RSpec.describe QuestionsController, type: :controller do
 
         expect(question.title).to eq "MyString"
         expect(question.body).to eq "MyText"
+      end
+    end
+  end
+
+  describe 'PATCH #like' do
+    context 'Authenticated user set like to question' do
+      before { sign_in user_one }
+
+      it 'set like flag on question' do
+        expect { patch :like, id: question, format: :json }.to change(Vote, :count).by(1)
+      end
+    end
+
+    context 'Non-authenticated user' do
+      it "don't change best flag on any answer in question" do
+        expect { patch :like, id: question, format: :json }.to_not change(Vote, :count)
       end
     end
   end

@@ -1,9 +1,10 @@
 Rails.application.routes.draw do
   devise_for :users
   resources :questions do
+    patch 'like', on: :member
     resources :answers do
       patch 'set_best', on: :member
     end
   end
-  root "questions#index"
+  root 'questions#index'
 end
