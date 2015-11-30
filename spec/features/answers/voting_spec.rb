@@ -8,15 +8,28 @@ feature 'Voting for answer', %q{
 
   given(:user) { create :user }
   given(:question) { create :question }
-  given!(:answer) { create :answer, question: question }
+  given!(:answer) { create :answer, question: question, user: user }
+  given!(:foreign_answer) { create :answer, question: question }
 
-  scenario 'Authenticated user can voting for answer', js: true do
-    sign_in user
-    visit question_path(question)
+  describe 'Authenticated user' do
+    scenario 'can not voting for his answer', js: true do
+      sign_in user
+      visit question_path(question)
 
-    within '.answers' do
-      click_on '+1'
-      expect(page).to have_content 'Votes: 1'
+      within '.answer:first-child' do
+        expect(page).to_not have_link '+1'
+      end
+    end
+
+    scenario 'can voting for foreign answer', js: true do
+      sign_in user
+      visit question_path(question)
+
+      within '.answers' do
+        click_on '+1'
+
+        expect(page).to have_content 'Votes: 1'
+      end
     end
   end
 

@@ -156,10 +156,14 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'PATCH #like' do
-    context 'Authenticated user set like to answer' do
-      before { sign_in user_one }
+    context 'Authenticated user' do
+      it 'can not set like on his answer' do
+        sign_in user_one
+        expect { patch :like, id: answer, question_id: question.id, format: :json }.to_not change(answer.votes, :count)
+      end
 
-      it 'set like flag on question' do
+      it 'can set like on foreign answer' do
+        sign_in user_two
         expect { patch :like, id: answer, question_id: question.id, format: :json }.to change(answer.votes, :count).by(1)
       end
     end

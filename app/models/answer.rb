@@ -12,4 +12,11 @@ class Answer < ActiveRecord::Base
           allow_destroy: true
 
   default_scope -> { order(best: :desc).order(created_at: :asc) }
+
+  def set_best
+    ActiveRecord::Base.transaction do
+      self.question.answers.update_all(best: false)
+      raise ActiveRecord::Rollback unless self.update(best: true)
+    end
+  end
 end
