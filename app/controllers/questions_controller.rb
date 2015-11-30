@@ -1,6 +1,8 @@
 class QuestionsController < ApplicationController
+  include Voted
+
   before_action :authenticate_user!, except: [ :index, :show ]
-  before_action :load_question, only: [:show, :update, :destroy, :like]
+  before_action :load_question, only: [:show, :update, :destroy]
 
   def index
     @questions = Question.all
@@ -42,14 +44,6 @@ class QuestionsController < ApplicationController
     else
       flash[:error] = "Permission denied."
       redirect_to question_path(@question)
-    end
-  end
-
-  def like
-    @question.like(current_user.id)
-
-    respond_to do |format|
-      format.json { render json: @question.votes.count }
     end
   end
 

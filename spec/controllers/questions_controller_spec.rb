@@ -186,7 +186,7 @@ RSpec.describe QuestionsController, type: :controller do
       before { sign_in user_one }
 
       it 'set like flag on question' do
-        expect { patch :like, id: question, format: :json }.to change(Vote, :count).by(1)
+        expect { patch :like, id: question, format: :json }.to change(question.votes, :count).by(1)
       end
     end
 

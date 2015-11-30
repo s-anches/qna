@@ -68,7 +68,7 @@ ActiveRecord::Schema.define(version: 20151129161052) do
 
   create_table "votes", force: :cascade do |t|
     t.integer  "user_id"
-    t.boolean  "liked"
+    t.integer  "value"
     t.integer  "votable_id"
     t.string   "votable_type"
     t.datetime "created_at",   null: false

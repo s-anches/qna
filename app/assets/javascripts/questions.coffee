@@ -7,7 +7,7 @@ ready = ->
 
   $("#question_like_link").bind "ajax:success", (e, data, status, xhr) ->
       response = $.parseJSON(xhr.responseText)
-      $("#votes").html "Votes: +#{xhr.responseText}"
+      $("#votes").html "Votes: #{xhr.responseText}"
     .bind "ajax:error", (e, xhr, status, error) ->
       response = $.parseJSON(xhr.responseText)
       $.each response, (index, value) ->

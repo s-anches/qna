@@ -14,7 +14,7 @@ feature 'Voting for question', %q{
     visit question_path(question)
 
     click_on '+1'
-    expect(page).to have_content 'Votes: +1'
+    expect(page).to have_content 'Votes: 1'
   end
 
   scenario 'Non-authenticated user can not voting for question'

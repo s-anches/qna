@@ -6,7 +6,7 @@
     - if user_signed_in?
       = link_to '+1', like_question_path(@question),
           method: :patch, remote: true, id: 'question_like_link'
-    p#votes = "Votes #{@question.votes.count}"
+    p#votes = "Votes: #{@question.votes.count}"
   .attachments
     = render 'layouts/attachments', attachments: @question.attachments
   - if user_signed_in? && @question.user_id == current_user.id
