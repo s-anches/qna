@@ -3,7 +3,7 @@
     h1= @question.title
     p= @question.body
   .col-xs-2
-    - if user_signed_in?
+    - if user_signed_in? && current_user.id != @question.user_id
       = link_to '+1', like_question_path(@question),
           method: :patch, remote: true, id: 'question_like_link'
     p#votes = "Votes: #{@question.votes.count}"

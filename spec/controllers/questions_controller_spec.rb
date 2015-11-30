@@ -182,16 +182,20 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'PATCH #like' do
-    context 'Authenticated user set like to question' do
-      before { sign_in user_one }
+    context 'Authenticated user' do
+      it 'can not set like on his question' do
+        sign_in user_one
+        expect { patch :like, id: question, format: :json }.to_not change(question.votes, :count)
+      end
 
-      it 'set like flag on question' do
-        expect { patch :like, id: question, format: :json }.to change(question.votes, :count).by(1)
+      it 'can set like on foreign question' do
+        sign_in user_two
+        expect { patch :like, id: question, format: :json}.to change(question.votes, :count).by(1)
       end
     end
 
     context 'Non-authenticated user' do
-      it "don't change like flag on question" do
+      it 'can not change like flag on question' do
         expect { patch :like, id: question, format: :json }.to_not change(Vote, :count)
       end
     end
