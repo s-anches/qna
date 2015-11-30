@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   end
 
   resources :questions, concerns: :votable do
-    resources :answers do
+    resources :answers, concerns: :votable do
       patch 'set_best', on: :member
     end
   end

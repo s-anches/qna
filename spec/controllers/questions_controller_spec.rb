@@ -191,7 +191,7 @@ RSpec.describe QuestionsController, type: :controller do
     end
 
     context 'Non-authenticated user' do
-      it "don't change best flag on any answer in question" do
+      it "don't change like flag on question" do
         expect { patch :like, id: question, format: :json }.to_not change(Vote, :count)
       end
     end

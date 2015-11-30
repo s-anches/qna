@@ -4,7 +4,17 @@
   - best = " glyphicon-star"
 
 div class="col-xs-12 answer thumbnail" data-id="#{answer.id}"
-  p.list-group-item-text= answer.body
+  .col-xs-10
+    p.list-group-item-text= answer.body
+  .col-xs-2 id = "answer-votes-#{answer.id}"
+    p = "Votes: #{answer.votes.count}"
+    - if user_signed_in?
+      = link_to '+1', like_question_answer_path(@question, answer),
+          method: :patch, remote: true,
+          id: "answer_like_link_#{answer.id}",
+          class: 'answer-like-link',
+          data: { id: answer.id }
+
   .attachments
     = render 'layouts/attachments', attachments: answer.attachments
   - if user_signed_in?

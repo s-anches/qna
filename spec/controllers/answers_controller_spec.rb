@@ -91,7 +91,7 @@ RSpec.describe AnswersController, type: :controller do
 
   describe 'DELETE #destroy' do
     before { answer }
-    
+
     context 'Authenticated user' do
 
       it 'delete his answer' do
@@ -155,4 +155,19 @@ RSpec.describe AnswersController, type: :controller do
     end
   end
 
+  describe 'PATCH #like' do
+    context 'Authenticated user set like to answer' do
+      before { sign_in user_one }
+
+      it 'set like flag on question' do
+        expect { patch :like, id: answer, question_id: question.id, format: :json }.to change(answer.votes, :count).by(1)
+      end
+    end
+
+    context 'Non-authenticated user' do
+      it "don't change like flag on answer" do
+        expect { patch :like, id: answer, question_id: question.id, format: :json }.to_not change(Vote, :count)
+      end
+    end
+  end
 end
