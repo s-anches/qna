@@ -166,6 +166,12 @@ RSpec.describe AnswersController, type: :controller do
         sign_in user_two
         expect { patch :like, id: answer, question_id: question.id, format: :json }.to change(answer.votes, :count).by(1)
       end
+
+      it 'can vote only once' do
+        sign_in user_two
+        expect { patch :like, id: answer, question_id: question.id, format: :json }.to change(answer.votes, :count).by(1)
+        expect { patch :like, id: answer, question_id: question.id, format: :json }.to_not change(answer.votes, :count)
+      end
     end
 
     context 'Non-authenticated user' do

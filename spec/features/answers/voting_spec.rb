@@ -21,7 +21,7 @@ feature 'Voting for answer', %q{
       end
     end
 
-    scenario 'can voting for foreign answer', js: true do
+    scenario 'can voting for foreign answer only once', js: true do
       sign_in user
       visit question_path(question)
 
@@ -29,6 +29,11 @@ feature 'Voting for answer', %q{
         click_on '+1'
 
         expect(page).to have_content 'Votes: 1'
+
+        click_on '+1'
+
+        expect(page).to have_content 'Votes: 1'
+        expect(page).to have_content 'Access forbidden or you already voted'
       end
     end
   end

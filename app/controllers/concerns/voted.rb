@@ -18,7 +18,11 @@ module Voted
     end
 
     def vote(value)
-      @vote_object.vote(current_user, value)
-      render json: @vote_object.votes.count
+      if current_user.id != @vote_object.user_id && !@vote_object.voted?(current_user.id)
+          @vote_object.vote(current_user, value)
+          render json: @vote_object.votes.count
+      else
+        render json: {errors: 'Access forbidden or you already voted'}, status: :forbidden
+      end
     end
 end

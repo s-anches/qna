@@ -18,12 +18,15 @@ feature 'Voting for question', %q{
       expect(page).to_not have_link '+1'
     end
 
-    scenario 'can voting for foreign question', js: true do
+    scenario 'can voting for foreign question only once', js: true do
       sign_in user
       visit question_path(foreign_question)
 
       click_on '+1'
       expect(page).to have_content 'Votes: 1'
+      click_on '+1'
+      expect(page).to have_content 'Votes: 1'
+      expect(page).to have_content 'Access forbidden or you already voted'
     end
   end
 

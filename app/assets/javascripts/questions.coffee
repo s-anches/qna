@@ -11,7 +11,7 @@ ready = ->
     .bind "ajax:error", (e, xhr, status, error) ->
       response = $.parseJSON(xhr.responseText)
       $.each response, (index, value) ->
-        $("#votes").append "<p>ERROR</p>"
+        $("#votes").after "<div class='error'>" + value + "</div>"
 
 $(document).ready(ready)
 $(document).on('page:load', ready)

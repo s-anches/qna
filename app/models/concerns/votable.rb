@@ -10,4 +10,8 @@ module Votable
     votes.create(user: user, value: value)
   end
 
+  def voted?(user)
+    votes.find_by(user_id: user) ? true : false
+  end
+
 end
