@@ -1,0 +1,32 @@
+- if answer.is_voted?(current_user)
+  - if answer.is_liked?(current_user)
+    - like_class = 'answer-unvote-link liked'
+    - dislike_class = 'answer-dislike-link not-active'
+  - else
+    - like_class = 'answer-like-link not-active'
+    - dislike_class = 'answer-unvote-link disliked'
+  = link_to unvote_question_answer_path(@question, answer),
+      method: :delete, remote: true,
+      class: "pull-left #{like_class}",
+      data: { id: answer.id, 'question-id': @question.id }
+      = fa_icon 'thumbs-o-up 2x'
+  = link_to "Rating: #{answer.votes.rating}", '',
+      class: 'pull-center votes-count'
+  = link_to unvote_question_answer_path(@question, answer),
+      method: :delete, remote: true,
+      class: "pull-right #{dislike_class}",
+      data: { id: answer.id, 'question-id': @question.id }
+      = fa_icon 'thumbs-o-down 2x'
+- else
+  = link_to like_question_answer_path(@question, answer),
+      method: :patch, remote: true,
+      class: 'pull-left answer-like-link',
+      data: { id: answer.id, 'question-id': @question.id }
+      = fa_icon 'thumbs-o-up 2x'
+  = link_to "Rating: #{answer.votes.rating}", '',
+      class: 'pull-center votes-count'
+  = link_to dislike_question_answer_path(@question, answer),
+      method: :patch, remote: true,
+      class: 'pull-right answer-dislike-link',
+      data: { id: answer.id, 'question-id': @question.id }
+      = fa_icon 'thumbs-o-down 2x'

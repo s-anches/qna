@@ -7,41 +7,97 @@ feature 'Voting for answer', %q{
 } do
 
   given(:user) { create :user }
+  given(:user_two) { create :user }
   given(:question) { create :question }
   given!(:answer) { create :answer, question: question, user: user }
   given!(:foreign_answer) { create :answer, question: question }
 
   describe 'Authenticated user' do
-    scenario 'can not voting for his answer', js: true do
+    before do
       sign_in user
       visit question_path(question)
+    end
 
-      within '.answer:first-child' do
-        expect(page).to_not have_link '+1'
+    scenario 'can like foreign answer only once time', js: true do
+      within '.answers' do
+        find(".answer-like-link[data-id='#{foreign_answer.id}']").click
+
+        expect(page).to have_content 'Rating: 1'
+
+        expect(page).to_not have_css 'a.answer-like-link'
+        expect(page).to have_css 'a.answer-unvote-link'
+        expect(page).to have_css 'a.liked'
+
+        find(".answer-unvote-link[data-id='#{foreign_answer.id}']").click
+        expect(page).to have_content 'Rating: 0'
       end
     end
 
-    scenario 'can voting for foreign answer only once', js: true do
-      sign_in user
-      visit question_path(question)
-
+    scenario 'can dislike foreign answer only once time', js: true do
       within '.answers' do
-        click_on '+1'
+        find(".answer-dislike-link[data-id='#{foreign_answer.id}']").click
 
-        expect(page).to have_content 'Votes: 1'
+        expect(page).to have_content 'Rating: -1'
 
-        click_on '+1'
+        expect(page).to_not have_css 'a.answer-dislike-link'
+        expect(page).to have_css 'a.answer-unvote-link'
+        expect(page).to have_css 'a.disliked'
 
-        expect(page).to have_content 'Votes: 1'
-        expect(page).to have_content 'Access forbidden or you already voted'
+        find(".answer-unvote-link[data-id='#{foreign_answer.id}']").click
+        expect(page).to have_content 'Rating: 0'
+      end
+    end
+
+    scenario 'can change his resolution', js: true do
+      within '.answers' do
+        find(".answer-like-link[data-id='#{foreign_answer.id}']").click
+        expect(page).to have_content 'Rating: 1'
+
+        find(".answer-unvote-link[data-id='#{foreign_answer.id}']").click
+
+        expect(page).to have_content 'Rating: 0'
+        find(".answer-dislike-link[data-id='#{foreign_answer.id}']").click
+
+        expect(page).to have_content 'Rating: -1'
+      end
+    end
+
+    scenario 'can not voting for his answer', js: true do
+      within '.answers' do
+        visit question_path(question)
+
+        expect(page).to_not have_css "a.answer-like-link[data-id='#{answer.id}']"
+        expect(page).to_not have_css "a.answer-dislike-link[data-id='#{answer.id}']"
       end
     end
   end
 
-  scenario 'Non-authenticated user can not voting for question' do
-    visit question_path(question)
+  describe 'Non-authenticated user' do
+    before { visit question_path(question) }
 
-    expect(page).to_not have_link '+1'
+    scenario 'can not voting' do
+      within '.answers' do
+        expect(page).to_not have_css 'a.answer-like-link'
+        expect(page).to_not have_css 'a.answer-dislike-link'
+      end
+    end
+  end
+
+  scenario 'All can see rating', js: true do
+      sign_in user
+      visit question_path(question)
+      within '.answers' do
+        find(".answer-like-link[data-id='#{foreign_answer.id}']").click
+
+        expect(page).to have_content 'Rating: 1'
+      end
+
+      sign_out
+      visit question_path(question)
+
+      within '.answers' do
+        expect(page).to have_content 'Rating: 1'
+      end
   end
 
 end

@@ -6,15 +6,12 @@
 div class="col-xs-12 answer thumbnail" data-id="#{answer.id}"
   .col-xs-10
     p.list-group-item-text= answer.body
-  .col-xs-2 id = "answer-votes-#{answer.id}"
-    p = "Votes: #{answer.votes.count}"
+  .col-xs-2.text-center
     - if user_signed_in? && current_user.id != answer.user_id
-      = link_to '+1', like_question_answer_path(@question, answer),
-          method: :patch, remote: true,
-          id: "answer_like_link_#{answer.id}",
-          class: 'answer-like-link',
-          data: { id: answer.id }
-
+      = render 'answers/vote_links', answer: answer
+    - else
+      = link_to "Rating: #{answer.votes.rating}", '',
+          class: 'pull-center votes-count'
   .attachments
     = render 'layouts/attachments', attachments: answer.attachments
   - if user_signed_in?

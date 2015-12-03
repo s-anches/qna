@@ -5,6 +5,7 @@ RSpec.describe AnswersController, type: :controller do
   let(:user_two) { create(:user) }
   let(:question) { create(:question, user: user_one) }
   let(:answer) { create(:answer, question: question, user: user_one) }
+  let(:foreign_answer) { create(:answer, question: question) }
   let(:wrong_answer) { create(:wrong_answer, question: question, user: user_one) }
 
   before { @request.env['devise.mapping'] = Devise.mappings[:user] }
@@ -157,26 +158,89 @@ RSpec.describe AnswersController, type: :controller do
 
   describe 'PATCH #like' do
     context 'Authenticated user' do
-      it 'can not set like on his answer' do
-        sign_in user_one
+      before { sign_in user_one }
+
+      it 'can not like his answer' do
         expect { patch :like, id: answer, question_id: question.id, format: :json }.to_not change(answer.votes, :count)
       end
 
-      it 'can set like on foreign answer' do
-        sign_in user_two
-        expect { patch :like, id: answer, question_id: question.id, format: :json }.to change(answer.votes, :count).by(1)
+      it 'can like foreign answer' do
+        expect { patch :like, id: foreign_answer, question_id: question.id, format: :json }.to change(foreign_answer.votes, :count).by(1)
       end
 
-      it 'can vote only once' do
-        sign_in user_two
-        expect { patch :like, id: answer, question_id: question.id, format: :json }.to change(answer.votes, :count).by(1)
-        expect { patch :like, id: answer, question_id: question.id, format: :json }.to_not change(answer.votes, :count)
+      it 'can like only once' do
+        expect { patch :like, id: foreign_answer, question_id: question.id, format: :json }.to change(foreign_answer.votes, :count).by(1)
+        expect { patch :like, id: foreign_answer, question_id: question.id, format: :json }.to_not change(foreign_answer.votes, :count)
+      end
+
+      it 'render json' do
+        json = %({"rating": 1, "object": #{foreign_answer.id}})
+        patch :like, id: foreign_answer, question_id: question.id, format: :json
+        expect(response.body).to be_json_eql(json)
       end
     end
 
     context 'Non-authenticated user' do
-      it "don't change like flag on answer" do
+      it 'can not like answer' do
         expect { patch :like, id: answer, question_id: question.id, format: :json }.to_not change(Vote, :count)
+      end
+    end
+  end
+
+  describe 'PATCH #dislike' do
+    context 'Authenticated user' do
+      before { sign_in user_one }
+
+      it 'can not dislike his answer' do
+        expect { patch :dislike, id: answer, question_id: question.id, format: :json }.to_not change(answer.votes, :count)
+      end
+
+      it 'can dislike foreign answer' do
+        expect { patch :dislike, id: foreign_answer, question_id: question.id, format: :json}.to change(foreign_answer.votes, :count).by(1)
+      end
+
+      it 'can dislike only once' do
+        expect { patch :dislike, id: foreign_answer, question_id: question.id, format: :json}.to change(foreign_answer.votes, :count).by(1)
+        expect { patch :dislike, id: foreign_answer, question_id: question.id, format: :json}.to_not change(foreign_answer.votes, :count)
+      end
+
+      it 'render json' do
+        json = %({"rating": 1, "object": #{foreign_answer.id}})
+        patch :like, id: foreign_answer, question_id: question.id, format: :json
+        expect(response.body).to be_json_eql(json)
+      end
+    end
+
+    context 'Non-authenticated user' do
+      it 'can not dislike answer' do
+        expect { patch :dislike, id: answer, question_id: question.id, format: :json }.to_not change(Vote, :count)
+      end
+    end
+  end
+
+  describe 'DELETE #unvote' do
+    context 'Authenticated user' do
+      before do
+        sign_in user_one
+        patch :like, id: foreign_answer, question_id: question.id, format: :json
+      end
+
+      it 'Owner can delete his vote' do
+        expect { delete :unvote, id: foreign_answer, question_id: question.id, format: :json }.to change(foreign_answer.votes, :count).by(-1)
+      end
+
+      it 'render json success' do
+        json = %({"rating": 0, "object": #{foreign_answer.id}})
+        delete :unvote, id: foreign_answer, question_id: question.id, format: :json
+        expect(response.body).to be_json_eql(json)
+      end
+
+      it 'render json error' do
+        json = %({"errors": "Object not found"})
+        delete :unvote, id: foreign_answer, question_id: question.id, format: :json
+        delete :unvote, id: foreign_answer, question_id: question.id, format: :json
+        expect(response.status).to eq 404
+        expect(response.body).to be_json_eql(json)
       end
     end
   end

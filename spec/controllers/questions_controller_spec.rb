@@ -216,6 +216,7 @@ RSpec.describe QuestionsController, type: :controller do
   describe 'PATCH #dislike' do
     context 'Authenticated user' do
       before { sign_in user_one }
+
       it 'can not dislike his question' do
         expect { patch :dislike, id: question, format: :json }.to_not change(question.votes, :count)
       end
