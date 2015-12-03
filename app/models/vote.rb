@@ -3,4 +3,8 @@ class Vote < ActiveRecord::Base
   belongs_to :user
 
   validates :user_id, presence: true
+
+  scope :likes, -> { where("value > 0") }
+  scope :dislikes, -> { where("value < 0") }
+  scope :rating, -> { sum(:value) }
 end

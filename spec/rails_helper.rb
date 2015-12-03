@@ -32,6 +32,7 @@ Dir[Rails.root.join('spec/models/concerns/**/*.rb')].each { |f| require f }
 ActiveRecord::Migration.maintain_test_schema!
 
 RSpec.configure do |config|
+  config.include JsonSpec::Helpers
   config.include FactoryGirl::Syntax::Methods
   config.include Devise::TestHelpers, type: :controller
   config.extend ControllerMacros, type: :controller

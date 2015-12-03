@@ -10,6 +10,7 @@ gem 'jquery-rails'
 gem 'turbolinks'
 gem 'jbuilder', '~> 2.0'
 gem 'sdoc', '~> 0.4.0', group: :doc
+gem "font-awesome-rails"
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
@@ -34,6 +35,9 @@ group :development, :test do
   gem 'launchy'
   gem 'poltergeist'
   gem 'database_cleaner'
+  gem 'capybara-webkit'
+  gem 'selenium-webdriver'
+  gem 'json_spec'
 end
 
 group :development do

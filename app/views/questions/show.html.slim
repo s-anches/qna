@@ -2,11 +2,12 @@
   .col-xs-10
     h1= @question.title
     p= @question.body
-  .col-xs-2
+  .col-xs-2.text-center
     - if user_signed_in? && current_user.id != @question.user_id
-      = link_to '+1', like_question_path(@question),
-          method: :patch, remote: true, id: 'question_like_link'
-    p#votes = "Votes: #{@question.votes.count}"
+      = render 'questions/vote_links', question: @question
+    - else
+      = link_to "Rating: #{@question.votes.rating}", '',
+          class: 'pull-center votes-count'
   .attachments
     = render 'layouts/attachments', attachments: @question.attachments
   - if user_signed_in? && @question.user_id == current_user.id

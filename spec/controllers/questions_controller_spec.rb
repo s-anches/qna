@@ -4,6 +4,7 @@ RSpec.describe QuestionsController, type: :controller do
   let(:user_one) { create(:user) }
   let(:user_two) { create(:user) }
   let(:question) { create(:question, user: user_one) }
+  let(:foreign_question) { create(:question) }
   let(:questions) { create_list(:question, 2, user: user_one) }
   let(:answers) { create_list(:answer, 2, question: question, user: user_one) }
 
@@ -183,26 +184,88 @@ RSpec.describe QuestionsController, type: :controller do
 
   describe 'PATCH #like' do
     context 'Authenticated user' do
-      it 'can not set like on his question' do
-        sign_in user_one
+      before { sign_in user_one }
+
+      it 'can not like his question' do
         expect { patch :like, id: question, format: :json }.to_not change(question.votes, :count)
       end
 
-      it 'can set like on foreign question' do
-        sign_in user_two
-        expect { patch :like, id: question, format: :json}.to change(question.votes, :count).by(1)
+      it 'can like foreign question' do
+        expect { patch :like, id: foreign_question, format: :json }.to change(foreign_question.votes, :count).by(1)
       end
 
-      it 'can vote only once' do
-        sign_in user_two
-        expect { patch :like, id: question, format: :json}.to change(question.votes, :count).by(1)
-        expect { patch :like, id: question, format: :json}.to_not change(question.votes, :count)
+      it 'can like only once' do
+        expect { patch :like, id: foreign_question, format: :json }.to change(foreign_question.votes, :count).by(1)
+        expect { patch :like, id: foreign_question, format: :json }.to_not change(foreign_question.votes, :count)
+      end
+
+      it 'render json' do
+        json = %({"rating": 1, "object": #{foreign_question.id}})
+        patch :like, id: foreign_question, format: :json
+        expect(response.body).to be_json_eql(json)
       end
     end
 
     context 'Non-authenticated user' do
-      it 'can not change like flag on question' do
+      it 'can not like question' do
         expect { patch :like, id: question, format: :json }.to_not change(Vote, :count)
+      end
+    end
+  end
+
+  describe 'PATCH #dislike' do
+    context 'Authenticated user' do
+      before { sign_in user_one }
+      it 'can not dislike his question' do
+        expect { patch :dislike, id: question, format: :json }.to_not change(question.votes, :count)
+      end
+
+      it 'can dislike foreign question' do
+        expect { patch :dislike, id: foreign_question, format: :json}.to change(foreign_question.votes, :count).by(1)
+      end
+
+      it 'can vote only once' do
+        expect { patch :dislike, id: foreign_question, format: :json}.to change(foreign_question.votes, :count).by(1)
+        expect { patch :dislike, id: foreign_question, format: :json}.to_not change(foreign_question.votes, :count)
+      end
+
+      it 'render json' do
+        json = %({"rating": 1, "object": #{foreign_question.id}})
+        patch :like, id: foreign_question, format: :json
+        expect(response.body).to be_json_eql(json)
+      end
+    end
+
+    context 'Non-authenticated user' do
+      it 'can not dislike question' do
+        expect { patch :dislike, id: question, format: :json }.to_not change(Vote, :count)
+      end
+    end
+  end
+
+  describe 'DELETE #unvote' do
+    context 'Authenticated user' do
+      before do
+        sign_in user_one
+        patch :like, id: foreign_question, format: :json
+      end
+
+      it 'Owner can delete his vote' do
+        expect { delete :unvote, id: foreign_question, format: :json }.to change(foreign_question.votes, :count).by(-1)
+      end
+
+      it 'render json success' do
+        json = %({"rating": 0, "object": #{foreign_question.id}})
+        delete :unvote, id: foreign_question, format: :json
+        expect(response.body).to be_json_eql(json)
+      end
+
+      it 'render json error' do
+        json = %({"errors": "Object not found"})
+        delete :unvote, id: foreign_question, format: :json
+        delete :unvote, id: foreign_question, format: :json
+        expect(response.status).to eq 404
+        expect(response.body).to be_json_eql(json)
       end
     end
   end

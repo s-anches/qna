@@ -7,33 +7,88 @@ feature 'Voting for question', %q{
 } do
 
   given(:user) { create :user }
+  given(:user_two) { create :user }
   given(:question) { create :question, user: user }
   given(:foreign_question) { create :question }
 
   describe 'Authenticated user' do
-    scenario 'can not voting for his question', js: true do
-      sign_in user
-      visit question_path(question)
-
-      expect(page).to_not have_link '+1'
-    end
-
-    scenario 'can voting for foreign question only once', js: true do
+    before do
       sign_in user
       visit question_path(foreign_question)
+    end
 
-      click_on '+1'
-      expect(page).to have_content 'Votes: 1'
-      click_on '+1'
-      expect(page).to have_content 'Votes: 1'
-      expect(page).to have_content 'Access forbidden or you already voted'
+    scenario 'can like foreign question only once time', js: true do
+      find('.question-like-link').click
+
+      expect(page).to have_content 'Rating: 1'
+
+      expect(page).to_not have_css 'a.question-like-link'
+      expect(page).to have_css 'a.question-unvote-link'
+      expect(page).to have_css 'a.liked'
+
+      find('.question-unvote-link').click
+      expect(page).to have_content 'Rating: 0'
+    end
+
+    scenario 'can dislike foreign question only once time', js: true do
+      find('.question-dislike-link').click
+
+      expect(page).to have_content 'Rating: -1'
+
+      expect(page).to_not have_css 'a.question-dislike-link'
+      expect(page).to have_css 'a.question-unvote-link'
+      expect(page).to have_css 'a.disliked'
+
+      find('.question-unvote-link').click
+      expect(page).to have_content 'Rating: 0'
+    end
+
+    scenario 'can change his resolution', js: true do
+      find('.question-like-link').click
+      expect(page).to have_content 'Rating: 1'
+
+      find('.question-unvote-link').click
+
+      expect(page).to have_content 'Rating: 0'
+      find('.question-dislike-link').click
+
+      expect(page).to have_content 'Rating: -1'
+    end
+
+    scenario 'can not voting for his question', js: true do
+      visit question_path(question)
+
+      expect(page).to_not have_css 'a.question-like-link'
+      expect(page).to_not have_css 'a.question-dislike-link'
     end
   end
 
-  scenario 'Non-authenticated user can not voting for question' do
-    visit question_path(question)
+  describe 'Non-authenticated user' do
+    before { visit question_path(question) }
 
-    expect(page).to_not have_link '+1'
+    scenario 'can not voting' do
+      expect(page).to_not have_css 'a.question-like-link'
+      expect(page).to_not have_css 'a.question-dislike-link'
+    end
+  end
+
+  scenario 'All can see rating', js: true do
+      sign_in user
+      visit question_path(foreign_question)
+      find('.question-like-link').click
+
+      expect(page).to have_content 'Rating: 1'
+
+      sign_out
+      sign_in user_two
+      visit question_path(foreign_question)
+      find('.question-dislike-link').click
+
+      expect(page).to have_content 'Rating: 0'
+
+      sign_out
+      visit question_path(foreign_question)
+      expect(page).to have_content 'Rating: 0'
   end
 
 end
