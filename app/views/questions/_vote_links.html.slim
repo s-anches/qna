@@ -1,4 +1,4 @@
-- if question.is_voted?(current_user)
+- if question.votes.exists?(user: current_user)
   - if question.is_liked?(current_user)
     - like_class = 'question-unvote-link liked'
     - dislike_class = 'question-dislike-link not-active'
@@ -9,8 +9,9 @@
       method: :delete, remote: true,
       class: "pull-left #{like_class}"
       = fa_icon 'thumbs-o-up 2x'
-  = link_to "Rating: #{question.votes.rating}", '',
-      class: 'pull-center votes-count'
+  p.pull-center.votes-count
+    ' Rating:
+    = question.rating
   = link_to unvote_question_path(question),
       method: :delete, remote: true,
       class: "pull-right #{dislike_class}"
@@ -20,8 +21,9 @@
       method: :patch, remote: true,
       class: 'pull-left question-like-link'
       = fa_icon 'thumbs-o-up 2x'
-  = link_to "Rating: #{question.votes.rating}", '',
-      class: 'pull-center votes-count'
+  p.pull-center.votes-count
+    ' Rating:
+    = question.rating
   = link_to dislike_question_path(question),
       method: :patch, remote: true,
       class: 'pull-right question-dislike-link'

@@ -28,18 +28,6 @@ RSpec.describe Question, type: :model do
     end
   end
 
-  describe 'is_voted method' do
-    it 'return true if user voted' do
-      question.vote(user, 1)
-
-      expect(question.is_voted?(user)).to eq true
-    end
-
-    it 'return false if user not voted' do
-      expect(question.is_voted?(user)).to eq false
-    end
-  end
-
   describe 'is_liked method' do
     it 'return true if liked' do
       question.vote(user, 1)

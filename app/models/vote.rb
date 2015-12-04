@@ -6,5 +6,4 @@ class Vote < ActiveRecord::Base
 
   scope :likes, -> { where("value > 0") }
   scope :dislikes, -> { where("value < 0") }
-  scope :rating, -> { sum(:value) }
 end

@@ -11,6 +11,7 @@ RSpec.describe Answer, type: :model do
 
   it { should accept_nested_attributes_for :attachments }
 
+  let(:user) { create :user }
   let(:question) { create :question }
   let!(:answer_one) {
     create :answer,
@@ -52,6 +53,32 @@ RSpec.describe Answer, type: :model do
 
       expect(answer_best.best?).to eq false
       expect(answer_one.best?).to eq true
+    end
+  end
+
+  describe 'vote and unvote method' do
+    before { answer_one.vote(user, 1) }
+    it 'set vote to answer' do
+      expect(answer_one.votes.first.value).to eq 1
+    end
+
+    it 'remove vote from question' do
+      answer_one.unvote(user)
+      expect(answer_one.votes.count).to eq 0
+    end
+  end
+
+  describe 'is_liked method' do
+    it 'return true if liked' do
+      answer_one.vote(user, 1)
+
+      expect(answer_one.is_liked?(user)).to eq true
+    end
+
+    it 'return false if disliked' do
+      answer_one.vote(user, -1)
+
+      expect(answer_one.is_liked?(user)).to eq false
     end
   end
 end

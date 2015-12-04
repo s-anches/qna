@@ -10,8 +10,9 @@ div class="col-xs-12 answer thumbnail" data-id="#{answer.id}"
     - if user_signed_in? && current_user.id != answer.user_id
       = render 'answers/vote_links', answer: answer
     - else
-      = link_to "Rating: #{answer.votes.rating}", '',
-          class: 'pull-center votes-count'
+      p.pull-center.votes-count
+        ' Rating:
+        = answer.rating
   .attachments
     = render 'layouts/attachments', attachments: answer.attachments
   - if user_signed_in?

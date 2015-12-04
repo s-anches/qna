@@ -6,8 +6,9 @@
     - if user_signed_in? && current_user.id != @question.user_id
       = render 'questions/vote_links', question: @question
     - else
-      = link_to "Rating: #{@question.votes.rating}", '',
-          class: 'pull-center votes-count'
+      p.pull-center.votes-count
+        ' Rating:
+        = @question.rating
   .attachments
     = render 'layouts/attachments', attachments: @question.attachments
   - if user_signed_in? && @question.user_id == current_user.id

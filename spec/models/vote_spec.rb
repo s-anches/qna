@@ -32,15 +32,11 @@ RSpec.describe Vote, type: :model do
 
   describe 'scopes' do
     it 'likes return only liked votes' do
-      expect(question.votes.likes).to eq ([vote_one, vote_two])
+      expect(Vote.likes).to eq ([vote_one, vote_two])
     end
 
     it 'dislikes return only disliked votes' do
-      expect(question.votes.dislikes).to eq ([vote_three])
-    end
-
-    it 'rating return sum of votes values' do
-      expect(question.votes.rating).to eq (vote_one.value + vote_two.value + vote_three.value)
+      expect(Vote.dislikes).to eq ([vote_three])
     end
   end
 
